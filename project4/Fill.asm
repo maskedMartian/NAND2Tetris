@@ -26,10 +26,7 @@
 
   @CLEAR
   D;JEQ     // jump to CLEAR if KBD == 0 (no key is being pressed)
-
-  @TOP
-  0;JMP     // unconditional jump to TOP 
-
+  
 
 //----------------------------------------------------------------------------
 (BLACK)     // subroutine to blacken the screen
@@ -70,8 +67,8 @@
   @SCREEN   // load the base address of SCREEN into A
   A=A+D     // add the offset stored in R0
 
-  M=0      // blacken the 16 pixels referenced by address A 
-
+  M=0      // clear the 16 pixels referenced by address A 
+           // by setting each bit to 0
   @0
   M=M-1     // increment the offset stored in R0
 
