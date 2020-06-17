@@ -16,7 +16,9 @@
   @0
   M=0       // initialize R0 to 0
 
-(TOP)
+
+//----------------------------------------------------------------------------
+(MAIN)      // main routine
   
   @KBD
   D=M       // load the value at the base address of KBD into D
@@ -26,7 +28,7 @@
 
   @CLEAR
   D;JEQ     // jump to CLEAR if KBD == 0 (no key is being pressed)
-  
+
 
 //----------------------------------------------------------------------------
 (BLACK)     // subroutine to blacken the screen
@@ -37,8 +39,8 @@
   @8192     // load the highest offset value of SCREEN memory
   D=D-A     // subtract the constant 8192 from the value in R0
 
-  @TOP
-  D;JEQ     // jump to TOP if D == 0 (R0 == 8192 - the screen is full black)
+  @MAIN
+  D;JEQ     // jump to MAIN if D == 0 (R0 == 8192 - the screen is full black)
 
   @0
   D=M       // load R0 into D
@@ -51,8 +53,8 @@
   @0
   M=M+1     // increment the offset stored in R0
 
-  @TOP
-  0;JMP     // unconditional jump to TOP
+  @MAIN
+  0;JMP     // unconditional jump to MAIN
 
 
 //----------------------------------------------------------------------------
@@ -61,8 +63,8 @@
   @0
   D=M       // load R0 into D
 
-  @TOP
-  D;JLT     // jump to TOP if R0 < 0 (all pixels of SCREEN have been cleared)
+  @MAIN
+  D;JLT     // jump to MAIN if R0 < 0 (all pixels of SCREEN have been cleared)
 
   @SCREEN   // load the base address of SCREEN into A
   A=A+D     // add the offset stored in R0
@@ -72,5 +74,6 @@
   @0
   M=M-1     // increment the offset stored in R0
 
-  @TOP
-  0;JMP     // unconditional jump to TOP
+  @MAIN
+  0;JMP     // unconditional jump to MAIN
+
