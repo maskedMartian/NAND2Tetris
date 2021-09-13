@@ -12,7 +12,7 @@ public:
     bool contains(std::string symbol);
     std::string getAddress(std::string symbol);
 private:
-	int nextAddress = 16;
+	// predefined symbols of the hack assembly langugage
 	std::map<std::string, std::string> table = {
         { "SP",     "0000000000000000" },
         { "LCL",    "0000000000000001" },
@@ -38,6 +38,7 @@ private:
         { "SCREEN", "0100000000000000" },
         {  "KBD",   "0110000000000000" },
     };
+	int nextAddress = 16;
 };
 
 #endif
