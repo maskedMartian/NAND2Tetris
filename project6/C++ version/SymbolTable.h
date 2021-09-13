@@ -11,6 +11,7 @@ public:
     bool contains(std::string symbol);
     std::string getAddress(std::string symbol);
 private:
+	int nextAddress = 16;
 	std::map<std::string, std::string> table = {
         { "SP",     "0000000000000000" },
         { "LCL",    "0000000000000001" },

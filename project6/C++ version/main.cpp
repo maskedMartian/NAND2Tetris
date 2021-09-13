@@ -18,6 +18,11 @@ int main(int argc, char** argv)
 	output.closeFile();
 	parser.closeFile();
 	
+	SymbolTable symbolTable;
+	
+	std::cout << symbolTable.contains("R16") << "\n";
+	std::cout << symbolTable.getAddress("THIS") << "\n";
+	
 	return 0;
 }
 
