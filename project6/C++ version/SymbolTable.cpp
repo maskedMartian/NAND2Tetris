@@ -1,17 +1,16 @@
 #include "SymbolTable.h"
 
+#include <bitset>
+
 void SymbolTable::addEntry(std::string symbol)
 {
-	std::string symbolAdress = std::string(16 - symbol.length(), '0') + old_string;
-	std::string new_string = std::string(n_zero - old_string.length(), '0') + old_string;
-	table.insert({ symbol, nextAddress });
+	table.insert({ symbol, std::bitset<16>(nextAddress).to_string() });
 	nextAddress++;
 }
 
 void SymbolTable::addEntry(std::string symbol, std::string address)
 {
-	std::string symbolAddress
-	table.insert({ symbol, std::bitset<8>(address).to_string() });
+	table.insert({ symbol, address });
 }
 
 bool SymbolTable::contains(std::string symbol)
