@@ -7,11 +7,11 @@
 class Output
 {
 public:
-	Output(std::string fileName);
+    Output(std::string fileName);
     void writeToBin(std::string instruction);
     void closeFile();
 private:
-	std::ofstream binFile;
+    std::ofstream binFile;
 };
 
 #endif

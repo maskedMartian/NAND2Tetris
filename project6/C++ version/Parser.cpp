@@ -1,24 +1,22 @@
 #include "Parser.h"
 
 #include <stdlib.h>
-
 #include <iostream>
-
 
 Parser::Parser(std::string fileName) : asmFile{ fileName }
 {
-	/*
-	if (fileName.substr(fileName.length() - 4, 4) != ".asm")
-	{
-		std::cout << "ERROR: Assembly file expected";
-		exit(1);
-	}
-	*/
+    /*
+    if (fileName.substr(fileName.length() - 4, 4) != ".asm")
+    {
+        std::cout << "ERROR: Assembly file expected";
+        exit(1);
+    }
+    */
 }
 
 bool Parser::hasMoreCommands()
 {
-	return (!asmFile.eof()) ? true : false;
+    return (!asmFile.eof()) ? true : false;
 }
 
 void Parser::advance()
@@ -29,42 +27,42 @@ void Parser::advance()
 
 std::string Parser::commandType()
 {
-	return "foo";
+    return "foo";
 }
 
 std::string Parser::symbol()
 {
-	return "foo";
+    return "foo";
 }
 
 std::string Parser::dest()
 {
-	return "foo";
+    return "foo";
 }
 
 std::string Parser::comp()
 {
-	return "foo";
+    return "foo";
 }
 
 std::string Parser::jump()
 {
-	return "foo";
+    return "foo";
 }
 
 bool Parser::isConstant()
 {
-	return true;
+    return true;
 }
 
 std::string Parser::getAddress()
 {
-	return "foo";
+    return "foo";
 }
 
 std::string Parser::getConstant()
 {
-	return "foo";
+    return "foo";
 }
 
 void Parser::resetFile()
@@ -73,6 +71,6 @@ void Parser::resetFile()
 
 void Parser::closeFile()
 {
-	asmFile.close();
+    asmFile.close();
 }
 
