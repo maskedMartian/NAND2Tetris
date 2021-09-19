@@ -16,12 +16,13 @@ Parser::Parser(std::string fileName) : asmFile{ fileName }
 
 bool Parser::hasMoreCommands()
 {
-    return (!asmFile.eof()) ? true : false;
+    return (asmFile.eof() ? false : true);
 }
 
 void Parser::advance()
 {
     std::getline(asmFile, command);
+    // REMOVE THE NEXT LINE!
     std::cout << command << "\n";
 }
 
@@ -67,6 +68,8 @@ std::string Parser::getConstant()
 
 void Parser::resetFile()
 {
+    asmFile.clear();
+    asmFile.seekg(0, asmFile.beg);
 }
 
 void Parser::closeFile()
