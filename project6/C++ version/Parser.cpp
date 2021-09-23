@@ -4,7 +4,7 @@
 #include <istream>
 #include <iostream>
 
-Parser::Parser(std::string fileName)
+Parser::Parser(std::string fileName) : lineAddress{ 0 }
 {
     if (fileName.substr(fileName.length() - 4, 4) != ".asm") {
         std::cout << "ERROR: Assembly file expected\n";
@@ -47,14 +47,24 @@ void Parser::advance()
     std::cout << "advance:  " << command << "\n";
 }
 
-std::string Parser::commandType()
+std::string Parser::commandType() const
 {
-    return "foo";
+    if (command[0] == '@') {
+        return "A_COMMAND";
+    } else if (command[0] == '(' && command[command.length() - 1] == ')') {
+        return "L_COMMAND";
+    } else {
+        return "C_COMMAND";
+    }
 }
 
-std::string Parser::symbol()
+std::string Parser::symbol() const
 {
-    return "foo";
+    if (command[0] == '@') {
+        return command.substr(1, command.length() - 1);
+    } else {
+        return command.substr(1, command.length() - 2);
+    }
 }
 
 std::string Parser::dest()
