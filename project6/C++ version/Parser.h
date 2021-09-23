@@ -7,7 +7,6 @@
 class Parser
 {
 public:
-    std::string command;
     Parser(std::string fileName);
     bool hasMoreCommands();
     void advance();
@@ -22,8 +21,10 @@ public:
     void resetFile();
     void closeFile();
 private:
+    bool isBlank(std::string line);
+    bool isComment(std::string line);
     std::ifstream asmFile;
-    //std::string command;
+    std::string command;
     int lineAddress;
 };
 
