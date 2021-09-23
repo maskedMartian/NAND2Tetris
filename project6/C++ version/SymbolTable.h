@@ -9,7 +9,7 @@ class SymbolTable
 public:
     void addEntry(std::string symbol);
     void addEntry(std::string symbol, std::string address);
-    bool contains(std::string symbol);
+    bool contains(std::string symbol) const;
     std::string getAddress(std::string symbol);
 private:
     // predefined symbols of the hack assembly langugage

@@ -13,7 +13,7 @@ void SymbolTable::addEntry(std::string symbol, std::string address)
     table.insert({ symbol, address });
 }
 
-bool SymbolTable::contains(std::string symbol)
+bool SymbolTable::contains(std::string symbol) const
 {
     return (table.count(symbol)) ? true : false;
 }
