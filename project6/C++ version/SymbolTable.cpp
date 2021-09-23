@@ -22,4 +22,3 @@ std::string SymbolTable::getAddress(std::string symbol)
 {
     return table[symbol];
 }
-

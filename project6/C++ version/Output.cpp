@@ -8,9 +8,8 @@ void Output::writeToBin(std::string instruction)
 {
     binFile << instruction << "\n";
 }
-    
+
 void Output::closeFile()
 {
     binFile.close();
 }
-

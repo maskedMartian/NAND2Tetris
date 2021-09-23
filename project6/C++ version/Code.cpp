@@ -14,4 +14,3 @@ std::string Code::jump(std::string mnemonic)
 {
     return jumpType[mnemonic];
 }
-

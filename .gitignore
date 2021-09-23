@@ -10,3 +10,17 @@ project6/C++ version/Makefile.win
 project6/C++ version/Output.o
 project6/C++ version/Parser.o
 project6/C++ version/SymbolTable.o
+project6/C++ version/C++ version.sln
+project6/C++ version/C++ version.vcxproj
+project6/C++ version/C++ version.vcxproj.filters
+project6/C++ version/C++ version.vcxproj.user
+project6/C++ version/.vs/C++ version/v16/.suo
+project6/C++ version/.vs/C++ version/v16/Browse.VC.db
+project6/C++ version/.vs/C++ version/v16/Browse.VC.db-shm
+project6/C++ version/.vs/C++ version/v16/Browse.VC.db-wal
+project6/C++ version/.vs/C++ version/v16/Browse.VC.opendb
+project6/C++ version/.vs/C++ version/v16/ipch/AutoPCH/b530fbd9f4fe1d0e/CODE.ipch
+project6/C++ version/.vs/C++ version/v16/ipch/AutoPCH/cc2ba66e92f9bbc0/PARSER.ipch
+project6/C++ version/.vs/C++ version/v16/ipch/AutoPCH/e1b40fa898c4b896/OUTPUT.ipch
+project6/C++ version/.vs/C++ version/v16/ipch/AutoPCH/f5b4d1e8c4d0d763/SYMBOLTABLE.ipch
+project6/C++ version/.vs/C++ version/v16/ipch/AutoPCH/fa50ecf1f1c05d96/MAIN.ipch
