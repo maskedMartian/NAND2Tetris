@@ -69,22 +69,49 @@ std::string Parser::symbol() const
 
 std::string Parser::dest()
 {
-    return "foo";
+    if (command.find('=') != std::string::npos) {
+        return command.substr(0, command.find('='));
+    } else {
+        return "";
+    }
 }
 
 std::string Parser::comp()
 {
-    return "foo";
+    if (command.find('=') != std::string::npos) {
+        return command.substr(command.find('='), command.length() - 1);
+    } else {
+        return command.substr(0, command.find(';'));
+    }
+
+    // TRY THIS:
+    // if (command.find('=') != std::string::npos) {
+    //     return command.substr(command.find('='), command.length() - 1);
+    // } else if (command.find(';') != std::string::npos) {
+    //     return command.substr(0, command.find(';'));
+    // } else {
+    //     return "";
+    // }
 }
 
 std::string Parser::jump()
 {
-    return "foo";
+    if (command.find(';') != std::string::npos) {
+        return command.substr(command.find(';') + 1, command.length() - 1);
+    } else {
+        return "";
+    }
 }
 
 bool Parser::isConstant()
 {
-    return true;
+    std::string s = symbol();
+
+    if (std::all_of(s.begin(), s.end(), isdigit)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 std::string Parser::getAddress()
