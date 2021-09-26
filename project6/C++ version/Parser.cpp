@@ -1,6 +1,7 @@
 #include "Parser.h"
 
 #include <algorithm>
+#include <bitset>
 #include <istream>
 #include <iostream>
 
@@ -50,8 +51,6 @@ void Parser::advance()
     if (commandType() == "A_COMMAND" || commandType() == "C_COMMAND") {
         lineAddress++;
     }
-    // REMOVE THIS LINE WHEN FINISHED DEBUGGING!
-    std::cout << "advance:  " << command << "\n";
 }
 
 std::string Parser::commandType() const
@@ -74,7 +73,7 @@ std::string Parser::symbol() const
     }
 }
 
-std::string Parser::dest()
+std::string Parser::dest() const
 {
     if (command.find('=') != std::string::npos) {
         return command.substr(0, command.find('='));
@@ -83,25 +82,26 @@ std::string Parser::dest()
     }
 }
 
-std::string Parser::comp()
+std::string Parser::comp() const
 {
+    if (command.find('=') != std::string::npos) {
+        return command.substr(command.find('='), command.length() - 1);
+    } else if (command.find(';') != std::string::npos) {
+        return command.substr(0, command.find(';'));
+    } else {
+        return "";
+    }
+
+    /*
     if (command.find('=') != std::string::npos) {
         return command.substr(command.find('='), command.length() - 1);
     } else {
         return command.substr(0, command.find(';'));
     }
-
-    // TRY THIS:
-    // if (command.find('=') != std::string::npos) {
-    //     return command.substr(command.find('='), command.length() - 1);
-    // } else if (command.find(';') != std::string::npos) {
-    //     return command.substr(0, command.find(';'));
-    // } else {
-    //     return "";
-    // }
+    */
 }
 
-std::string Parser::jump()
+std::string Parser::jump() const
 {
     if (command.find(';') != std::string::npos) {
         return command.substr(command.find(';') + 1, command.length() - 1);
@@ -110,7 +110,7 @@ std::string Parser::jump()
     }
 }
 
-bool Parser::isConstant()
+bool Parser::isConstant() const
 {
     std::string s = symbol();
 
@@ -121,14 +121,22 @@ bool Parser::isConstant()
     }
 }
 
-std::string Parser::getAddress()
+std::string Parser::getAddress() const
 {
-    return "foo";
+    if (commandType() == "L_COMMAND") {
+        return std::bitset<16>(lineAddress).to_string();
+    } else {
+        return "";
+    }
 }
 
-std::string Parser::getConstant()
+std::string Parser::getConstant() const
 {
-    return "foo";
+    if (commandType() == "A_COMMAND") {
+        return std::bitset<16>(stoi(symbol(), nullptr)).to_string();
+    } else {
+        return "";
+    }
 }
 
 void Parser::resetFile()
@@ -142,8 +150,7 @@ void Parser::closeFile()
     asmFile.close();
 }
 
-
-bool Parser::isBlank(std::string line)
+bool Parser::isBlank(std::string line) const
 {
     if (std::all_of(line.begin(), line.end(), isspace)) {
         return true;
@@ -152,7 +159,7 @@ bool Parser::isBlank(std::string line)
     }
 }
 
-bool Parser::isComment(std::string line)
+bool Parser::isComment(std::string line) const
 {
     std::string partial;
     if (line.find("//") != std::string::npos) {

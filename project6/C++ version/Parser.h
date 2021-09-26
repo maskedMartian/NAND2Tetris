@@ -7,25 +7,24 @@
 class Parser
 {
 public:
-    std::string command;
     Parser(std::string fileName);
     bool hasMoreCommands();
     void advance();
     std::string commandType() const;
     std::string symbol() const;
-    std::string dest();
-    std::string comp();
-    std::string jump();
-    bool isConstant();
-    std::string getAddress();
-    std::string getConstant();
+    std::string dest() const;
+    std::string comp() const;
+    std::string jump() const;
+    bool isConstant() const;
+    std::string getAddress() const;
+    std::string getConstant() const;
     void resetFile();
     void closeFile();
 private:
-    bool isBlank(std::string line);
-    bool isComment(std::string line);
+    bool isBlank(std::string line) const;
+    bool isComment(std::string line) const;
     std::ifstream asmFile;
-    //std::string command;
+    std::string command;
     int lineAddress;
 };
 
