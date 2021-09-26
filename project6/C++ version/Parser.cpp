@@ -43,6 +43,13 @@ bool Parser::hasMoreCommands()
 void Parser::advance()
 {
     std::getline(asmFile, command);
+    if (command.find("//") != std::string::npos) {
+        command = command.substr(0, command.find("//"));
+    }
+    command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
+    if (commandType() == "A_COMMAND" || commandType() == "C_COMMAND") {
+        lineAddress++;
+    }
     // REMOVE THIS LINE WHEN FINISHED DEBUGGING!
     std::cout << "advance:  " << command << "\n";
 }
