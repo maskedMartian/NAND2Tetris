@@ -5,13 +5,13 @@
 #include <istream>
 #include <iostream>
 
-Parser::Parser(std::string fileName) : lineAddress{ 0 }
+Parser::Parser(std::string filename) : lineAddress{ 0 }
 {
-    if (fileName.substr(fileName.length() - 4, 4) != ".asm") {
+    if (filename.substr(filename.length() - 4, 4) != ".asm") {
         std::cout << "ERROR: Assembly file expected\n";
         exit(1);
     } else {
-        asmFile.open(fileName);
+        asmFile.open(filename);
         if (asmFile.fail()) {
             std::cout << "ERROR: Something went wrong trying to open the necessary files\n";
             exit(1);

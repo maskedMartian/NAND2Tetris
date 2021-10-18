@@ -7,7 +7,7 @@
 class Output
 {
 public:
-    Output(std::string fileName);
+    Output(std::string filename);
     void writeToBin(std::string instruction);
     void closeFile();
 private:

@@ -7,7 +7,7 @@
 class Parser
 {
 public:
-    Parser(std::string fileName);
+    Parser(std::string filename);
     bool hasMoreCommands();
     void advance();
     std::string commandType() const;
