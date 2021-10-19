@@ -84,6 +84,7 @@ std::string Parser::dest() const
 
 std::string Parser::comp() const
 {
+    /*
     if (command.find('=') != std::string::npos) {
         return command.substr(command.find('='), command.length() - 1);
     } else if (command.find(';') != std::string::npos) {
@@ -91,13 +92,18 @@ std::string Parser::comp() const
     } else {
         return "";
     }
+    */
 
-    /*
     if (command.find('=') != std::string::npos) {
-        return command.substr(command.find('='), command.length() - 1);
+        return command.substr(command.find('=') + 1, command.length() - 1);
     } else {
         return command.substr(0, command.find(';'));
     }
+
+    /*
+    # returns the computation mnemonic from a computation command
+    def comp(self)->str:
+        return (self._command[self._command.index("=") + 1:] if "=" in self._command else self._command[:self._command.index(";")])
     */
 }
 

@@ -50,6 +50,7 @@ private:
         { "D|M", "1010101" }
     };
     std::map<std::string, std::string> jumpType = {
+        { "", "000" },
         { "JGT", "001" },
         { "JEQ", "010" },
         { "JGE", "011" },

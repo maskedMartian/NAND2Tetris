@@ -32,6 +32,7 @@ int main(int argc, char** argv)
             }
         }
     }
+
     // reset file pointer to first line of source file
     parser.resetFile();
 
