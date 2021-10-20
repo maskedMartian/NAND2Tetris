@@ -12,6 +12,7 @@ public:
     std::string jump(std::string mnemonic);
 private:
     std::map<std::string, std::string> machineRegister = {
+        { "",   "000" },
         { "M",   "001" },
         { "D",   "010" },
         { "MD",  "011" },
