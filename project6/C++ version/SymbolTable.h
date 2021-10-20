@@ -11,7 +11,8 @@ public:
     bool contains(std::string symbol) const;
     std::string getAddress(std::string symbol);
 private:
-    // predefined symbols of the hack assembly langugage
+    // first 23 symbols are predefined by the hack assembly langugage
+    // additional symbols will be added for labels and variable names on the assembler's first pass
     std::map<std::string, std::string> table = {
         { "SP",     "0000000000000000" },
         { "LCL",    "0000000000000001" },

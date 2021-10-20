@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <bitset>
-#include <istream>
 #include <iostream>
 
 Parser::Parser(std::string filename) : lineAddress{ 0 }
@@ -84,27 +83,13 @@ std::string Parser::dest() const
 
 std::string Parser::comp() const
 {
-    /*
     if (command.find('=') != std::string::npos) {
-        return command.substr(command.find('='), command.length() - 1);
+        return command.substr(command.find('=') + 1, command.length() - 1);
     } else if (command.find(';') != std::string::npos) {
         return command.substr(0, command.find(';'));
     } else {
         return "";
     }
-    */
-
-    if (command.find('=') != std::string::npos) {
-        return command.substr(command.find('=') + 1, command.length() - 1);
-    } else {
-        return command.substr(0, command.find(';'));
-    }
-
-    /*
-    # returns the computation mnemonic from a computation command
-    def comp(self)->str:
-        return (self._command[self._command.index("=") + 1:] if "=" in self._command else self._command[:self._command.index(";")])
-    */
 }
 
 std::string Parser::jump() const
