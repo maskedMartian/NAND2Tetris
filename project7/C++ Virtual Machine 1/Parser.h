@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 /*
 FROM THE BOOK:
 The Parser class handles the parsing of a single .vm file, and encapsulates
@@ -36,7 +38,7 @@ class Parser
     Parser();
     bool hasMoreCommands(/*input file stream*/);
     void advance();
-    std::string commandType();  // USE AN ENUM FOR THIS???
+    commandTypes commandType();
     std::string arg1();
     std::string arg2();
 };
