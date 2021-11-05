@@ -1,5 +1,6 @@
 #pragma once
 
+#include <fstream>
 #include <string>
 
 /*
@@ -35,10 +36,14 @@ enum class commandTypes
 
 class Parser
 {
-    Parser();
-    bool hasMoreCommands(/*input file stream*/);
+public:
+    Parser(std::string filename);
+    ~Parser();
+    bool hasMoreCommands();
     void advance();
     commandTypes commandType();
     std::string arg1();
     std::string arg2();
+private:
+    std::ifstream vmFile;
 };

@@ -18,9 +18,12 @@ enum class PushPopCommands
 
 class CodeWriter
 {
+public:
     CodeWriter(/*output file stream*/);
     void setFileName(std::string fileName);
     void writeArithmetic(std::string command);
     void WritePushPop(PushPopCommands command, std::string segment, int index);
     void close();
+private:
+
 };
