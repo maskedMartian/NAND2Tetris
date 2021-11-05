@@ -47,22 +47,18 @@ bool Parser::hasMoreCommands()
     }
 }
 
-/*
 void Parser::advance()
 {
-    std::getline(asmFile, command);
+    if (hasMoreCommands()) {
+        std::getline(vmFile, command);
+    } // I could potentially set command to some arbitrary pre-defined value
+    /*
+    * Not sure if I need this or not - I don't think it will matter, but we'll see
+    // truncates end of line comment
     if (command.find("//") != std::string::npos) {
         command = command.substr(0, command.find("//"));
     }
-    command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
-    if (commandType() == "A_COMMAND" || commandType() == "C_COMMAND") {
-        lineAddress++;
-    }
-}
-*/
-void Parser::advance()
-{
-
+    */
 }
 
 /*

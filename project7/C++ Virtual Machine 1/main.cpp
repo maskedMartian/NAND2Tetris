@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 /*
 FROM THE BOOK:
@@ -11,6 +12,10 @@ each one of them.
 int main()
 {
     std::cout << "Hello world!";
+    std::string command = "[    Hey Dude! - // 700 $ and foo + spam   ]";
+    std::cout << "\n\nOld String : " << command << "\n";
+    command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
+    std::cout << "\n\nNew String : " << command << "\n";
 
     return 0;
 }
