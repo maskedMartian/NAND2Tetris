@@ -45,5 +45,7 @@ public:
     std::string arg1();
     std::string arg2();
 private:
+    bool isBlank(std::string line) const;
+    bool isComment(std::string line) const;
     std::ifstream vmFile;
 };

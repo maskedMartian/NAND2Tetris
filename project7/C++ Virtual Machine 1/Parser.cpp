@@ -1,5 +1,6 @@
 #include "Parser.h"
 
+#include <algorithm>
 #include <iostream>
 
 Parser::Parser(std::string filename)
@@ -24,32 +25,26 @@ Parser::~Parser()
     }
 }
 
-/*
 bool Parser::hasMoreCommands()
 {
     std::string line;
     std::streampos position;
 
     do {
-        position = asmFile.tellg();
-        std::getline(asmFile, line);
-    } while (!asmFile.eof() && isBlank(line) || isComment(line));
-    if (!asmFile.eof()) {
-        asmFile.seekg(position);
+        position = vmFile.tellg();
+        std::getline(vmFile, line);
+    } while ((isBlank(line) || isComment(line)) && !vmFile.eof());
+    if (!vmFile.eof()) {
+        vmFile.seekg(position);
         return true;
     } else {
-        if (!isBlank(line) && !isComment(line)) {
-            asmFile.seekg(position);
+        if (!(isBlank(line) || isComment(line))) {
+            vmFile.seekg(position);
             return true;
         } else {
             return false;
         }
     }
-}
-*/
-bool Parser::hasMoreCommands()
-{
-    return false;
 }
 
 /*
@@ -92,4 +87,25 @@ std::string Parser::arg1()
 std::string Parser::arg2()
 {
     return "bar";
+}
+
+bool Parser::isBlank(std::string line) const
+{
+    if (std::all_of(line.begin(), line.end(), isspace)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool Parser::isComment(std::string line) const
+{
+    std::string partial;
+    if (line.find("//") != std::string::npos) {
+        partial = line.substr(0, line.find("//"));
+        if (std::all_of(partial.begin(), partial.end(), isspace)) {
+            return true;
+        }
+    }
+    return false;
 }
