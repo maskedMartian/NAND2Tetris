@@ -46,6 +46,7 @@ void Parser::advance()
     if (command.find("//") != std::string::npos) {
         command = command.substr(0, command.find("//"));
     }
+    // remove all spaces from the string
     command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
     if (commandType() == "A_COMMAND" || commandType() == "C_COMMAND") {
         lineAddress++;
