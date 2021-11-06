@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
+// Opens the input file/stream and gets ready to parse it
 Parser::Parser(std::string filename)
 {
     if (filename.substr(filename.length() - 3, 3) != ".vm") {
@@ -18,6 +19,7 @@ Parser::Parser(std::string filename)
     }
 }
 
+// Closes the input file
 Parser::~Parser()
 {
     if (vmFile.is_open()) {
@@ -25,6 +27,8 @@ Parser::~Parser()
     }
 }
 
+// Checks if there are more commands in the input stream, skipping over all blank lines and lines
+// containing only comments
 bool Parser::hasMoreCommands()
 {
     std::string line;
@@ -47,11 +51,23 @@ bool Parser::hasMoreCommands()
     }
 }
 
+// Reads the next command from the input and makes it the current command
 void Parser::advance()
 {
+    if (!hasMoreCommands()) {
+
+    }
     if (hasMoreCommands()) {
         std::getline(vmFile, command);
-    } // I could potentially set command to some arbitrary pre-defined value
+    } // { else } I could potentially set command to some arbitrary pre-defined value
+
+
+    /*
+    // remove all spaces from the string
+    command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
+    */
+
+
     /*
     * Not sure if I need this or not - I don't think it will matter, but we'll see
     // truncates end of line comment
@@ -61,30 +77,39 @@ void Parser::advance()
     */
 }
 
-/*
-* Stuff
-* More stuff
-* Even more stuff
-* There is so much stuff!
-* Where did you get all this stuff?
-*/
-commandTypes Parser::commandType()
+// Returns the type of the current VM command
+commandTypes Parser::commandType() const
 {
-    return C_IF;
+    return _commandType;
 }
 
-// WTF does this do?
-std::string Parser::arg1()
+// Returns the first argument of the current command. In the case of C_ARITHMETIC, the command
+// itself (add, sub,etc.) is returned. Should not be called if the current command is C_RETURN.
+std::string Parser::arg1() const
 {
-    return "foo";
+    if (_commandType != C_RETURN) {
+        return _arg1;
+    } else {
+        exit(1);
+    }
 }
 
-// I don't know, but I bet this does something similar!
-std::string Parser::arg2()
+// Returns the second argument of the current command. Should be called only if the current command
+// is C_PUSH, C_POP, C_FUNCTION, or C_CALL.
+int Parser::arg2() const
 {
-    return "bar";
+    switch (_commandType) {
+    case C_PUSH:
+    case C_POP:
+    case C_FUNCTION:
+    case C_CALL:
+        return _arg2;
+    default:
+        exit(1);
+    }
 }
 
+// Checks whether its input string is completely whitespace
 bool Parser::isBlank(std::string line) const
 {
     if (std::all_of(line.begin(), line.end(), isspace)) {
@@ -94,6 +119,7 @@ bool Parser::isBlank(std::string line) const
     }
 }
 
+// Checks whether its input string is just a comment without any other text on that line
 bool Parser::isComment(std::string line) const
 {
     std::string partial;
