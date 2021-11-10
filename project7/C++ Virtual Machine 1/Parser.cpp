@@ -29,7 +29,7 @@ Parser::~Parser()
 
 // Checks if there are more commands in the input stream, skipping over all blank lines and lines
 // containing only comments
-bool Parser::hasMoreCommands()
+bool Parser::theFileHasMoreCommands()
 {
     std::string line;
     std::streampos position;
@@ -54,26 +54,43 @@ bool Parser::hasMoreCommands()
 // Reads the next command from the input and makes it the current command
 void Parser::advance()
 {
-    if (!hasMoreCommands()) {
-
+    std::string com1, com2, com3;
+    if (!theFileHasMoreCommands()) {
+        _commandType = C_NONE;
+        _arg1 = "";
+        _arg2 = -1;
+        return;
     }
-    if (hasMoreCommands()) {
+
+    if (theFileHasMoreCommands()) {
         std::getline(vmFile, command);
-    } // { else } I could potentially set command to some arbitrary pre-defined value
+
+        // truncates end of line comment
+        if (command.find("//") != std::string::npos) {
+            command = command.substr(0, command.find("//"));
+        }
+
+
+
+
+        /*
+        // remove leading whitespace
+        command = command.substr(command.find_first_not_of(" "));
+        // remove trailing whitespace
+        command = command.substr(0, command.find_last_not_of(" ") + 1);
+        com1 = command.substr(0,command.find(" "));
+        command = command.substr(com1.length(), command.find(" "));
+        */
+    } else {
+        _commandType = C_NONE;
+        _arg1 = "";
+        _arg2 = -1;
+    }
 
 
     /*
     // remove all spaces from the string
     command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
-    */
-
-
-    /*
-    * Not sure if I need this or not - I don't think it will matter, but we'll see
-    // truncates end of line comment
-    if (command.find("//") != std::string::npos) {
-        command = command.substr(0, command.find("//"));
-    }
     */
 }
 
@@ -90,7 +107,7 @@ std::string Parser::arg1() const
     if (_commandType != C_RETURN) {
         return _arg1;
     } else {
-        exit(1);
+        exit(1); // return NULL; instead?
     }
 }
 
@@ -105,7 +122,7 @@ int Parser::arg2() const
     case C_CALL:
         return _arg2;
     default:
-        exit(1);
+        exit(1); // return NULL; instead?
     }
 }
 
