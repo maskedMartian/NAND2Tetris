@@ -17,7 +17,7 @@ enum class commandTypes
     c_none
 };
 
-#define C_ARITHEMTIC commandTypes::c_arithmetic
+#define C_ARITHMETIC commandTypes::c_arithmetic
 #define C_PUSH       commandTypes::c_push
 #define C_POP        commandTypes::c_pop
 #define C_LABEL      commandTypes::c_label
@@ -26,6 +26,7 @@ enum class commandTypes
 #define C_FUNCTION   commandTypes::c_function
 #define C_RETURN     commandTypes::c_return
 #define C_CALL       commandTypes::c_call
+
 #define C_NONE       commandTypes::c_none
 
 // The Parser class handles the parsing of a single .vm file, and encapsulates access to the input
@@ -38,15 +39,13 @@ public:
     ~Parser();
     bool theFileHasMoreCommands();
     void advance();
-    commandTypes commandType() const;
-    std::string arg1() const;
+    commandTypes commandType();
+    std::string arg1();
     int arg2() const;
 private:
     bool isBlank(std::string line) const;
     bool isComment(std::string line) const;
+    std::string returnWordFromCommandPhrase(int number);
     std::ifstream vmFile;
-    std::string command;
-    commandTypes _commandType;
-    std::string _arg1;
-    int _arg2;
+    std::string commandPhrase;
 };

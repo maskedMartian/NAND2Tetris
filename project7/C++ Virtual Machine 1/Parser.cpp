@@ -54,67 +54,47 @@ bool Parser::theFileHasMoreCommands()
 // Reads the next command from the input and makes it the current command
 void Parser::advance()
 {
-    std::string com1, com2, com3;
-    if (!theFileHasMoreCommands()) {
-        _commandType = C_NONE;
-        _arg1 = "";
-        _arg2 = -1;
-        return;
-    }
-
     if (theFileHasMoreCommands()) {
-        std::getline(vmFile, command);
-
-        // truncates end of line comment
-        if (command.find("//") != std::string::npos) {
-            command = command.substr(0, command.find("//"));
+        std::getline(vmFile, commandPhrase);
+        // truncate end of line comment
+        if (commandPhrase.find("//") != std::string::npos) {
+            commandPhrase = commandPhrase.substr(0, commandPhrase.find("//"));
         }
-
-
-
-
-        /*
-        // remove leading whitespace
-        command = command.substr(command.find_first_not_of(" "));
-        // remove trailing whitespace
-        command = command.substr(0, command.find_last_not_of(" ") + 1);
-        com1 = command.substr(0,command.find(" "));
-        command = command.substr(com1.length(), command.find(" "));
-        */
     } else {
-        _commandType = C_NONE;
-        _arg1 = "";
-        _arg2 = -1;
+        commandPhrase = "";
     }
-
-
-    /*
-    // remove all spaces from the string
-    command.erase(std::remove_if(command.begin(), command.end(), isspace), command.end());
-    */
 }
 
 // Returns the type of the current VM command
-commandTypes Parser::commandType() const
+commandTypes Parser::commandType()
 {
-    return _commandType;
+    std::string firstWord = returnWordFromCommandPhrase(1);
+    
+    if (firstWord == "push") return C_PUSH;
+    if (firstWord == "pop") return C_POP;
+    if (firstWord == "label") return C_LABEL;
+    if (firstWord == "goto") return C_GOTO;
+    if (firstWord == "if") return C_IF;
+    if (firstWord == "function") return C_FUNCTION;
+    if (firstWord == "return") return C_RETURN;
+    if (firstWord == "call") return C_CALL;
+    return C_ARITHMETIC;
 }
 
 // Returns the first argument of the current command. In the case of C_ARITHMETIC, the command
 // itself (add, sub,etc.) is returned. Should not be called if the current command is C_RETURN.
-std::string Parser::arg1() const
+std::string Parser::arg1()
 {
-    if (_commandType != C_RETURN) {
-        return _arg1;
-    } else {
-        exit(1); // return NULL; instead?
-    }
+    if (commandType() == C_RETURN) exit(1);
+    if (commandType() == C_ARITHMETIC) return returnWordFromCommandPhrase(1);
+    return returnWordFromCommandPhrase(2);
 }
 
 // Returns the second argument of the current command. Should be called only if the current command
 // is C_PUSH, C_POP, C_FUNCTION, or C_CALL.
 int Parser::arg2() const
 {
+    /*
     switch (_commandType) {
     case C_PUSH:
     case C_POP:
@@ -124,6 +104,8 @@ int Parser::arg2() const
     default:
         exit(1); // return NULL; instead?
     }
+    */
+    return 0;
 }
 
 // Checks whether its input string is completely whitespace
@@ -147,4 +129,19 @@ bool Parser::isComment(std::string line) const
         }
     }
     return false;
+}
+
+std::string Parser::returnWordFromCommandPhrase(int number)
+{
+    std::string leftover = commandPhrase;
+    std::string word;
+
+    if (number < 1 || number > 3) return leftover;
+
+    for (auto i = 0; i < number; i++) {
+        leftover = leftover.substr(leftover.find_first_not_of(" "));
+        word = leftover.substr(0, leftover.find(" "));
+        leftover = leftover.substr(word.length());
+    }
+    return word;
 }
