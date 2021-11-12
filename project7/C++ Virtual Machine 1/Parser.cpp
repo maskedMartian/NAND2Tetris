@@ -3,21 +3,25 @@
 #include <algorithm>
 #include <iostream>
 
-#define FIRST_WORD       1
-#define THIRD_WORD       3
+#define ERROR                 1
+#define FIRST_WORD            1
+#define SECOND_WORD           2
+#define THIRD_WORD            3
+#define CHARS_IN_EXTENSION    3
 
 // Opens the input file/stream and gets ready to parse it
 Parser::Parser(std::string filename)
 {
-    if (filename.substr(filename.length() - 3, 3) != ".vm") {
+    // if the file extension is not .vm
+    if (filename.substr(filename.length() - CHARS_IN_EXTENSION, CHARS_IN_EXTENSION) != ".vm") {
         std::cout << "ERROR: VM file expected\n";
-        exit(1);
+        exit(ERROR);
     }
     else {
         vmFile.open(filename);
         if (vmFile.fail()) {
             std::cout << "ERROR: Something went wrong trying to open the necessary files\n";
-            exit(1);
+            exit(ERROR);
         }
     }
 }
@@ -74,9 +78,9 @@ void Parser::advance()
 }
 
 // Returns the type of the current VM command
-commandTypes Parser::commandType()
+commandTypes Parser::commandType() const
 {
-    std::string firstWord = returnWordFromCommandPhrase(1);
+    const std::string firstWord = extractFromCommandPhrase(FIRST_WORD);
     
     if (firstWord == "push") return C_PUSH;
     if (firstWord == "pop") return C_POP;
@@ -92,23 +96,23 @@ commandTypes Parser::commandType()
 
 // Returns the first argument of the current command. In the case of C_ARITHMETIC, the command
 // itself (add, sub,etc.) is returned. Should not be called if the current command is C_RETURN.
-std::string Parser::arg1()
+std::string Parser::arg1() const
 {
-    if (commandType() == C_ARITHMETIC) return returnWordFromCommandPhrase(1);
+    if (commandType() == C_ARITHMETIC) return extractFromCommandPhrase(FIRST_WORD);
     if (commandType() == C_RETURN || commandType() == C_NONE) return "";
-    return returnWordFromCommandPhrase(2);
+    return extractFromCommandPhrase(SECOND_WORD);
 }
 
 // Returns the second argument of the current command. Should be called only if the current command
 // is C_PUSH, C_POP, C_FUNCTION, or C_CALL.
-int Parser::arg2()
+int Parser::arg2() const
 {
     switch (commandType()) {
     case C_PUSH:
     case C_POP:
     case C_FUNCTION:
     case C_CALL:
-        return stoi(returnWordFromCommandPhrase(3));
+        return stoi(extractFromCommandPhrase(THIRD_WORD));
     default:
         return 0;
     }
@@ -127,34 +131,32 @@ bool Parser::isBlank(std::string line) const
 // Checks whether its input string is just a comment without any other text on that line
 bool Parser::isComment(std::string line) const
 {
-    std::string partial;
+    // if there is a comment on this line
     if (line.find("//") != std::string::npos) {
-        partial = line.substr(0, line.find("//"));
-        if (std::all_of(partial.begin(), partial.end(), isspace)) {
-            return true;
-        }
+        // copy all the text to the left of the comment into partial
+        const std::string partial = line.substr(0, line.find("//"));
+        // if partial is completely whitespace
+        if (std::all_of(partial.begin(), partial.end(), isspace)) return true;
     }
     return false;
 }
 
 // Returns the specified word from the string stored in the commandPhrase
 // member variable
-std::string Parser::returnWordFromCommandPhrase(int wordPosition)
+std::string Parser::extractFromCommandPhrase(int wordPosition) const
 {
-    if (wordPosition < FIRST_WORD || wordPosition > THIRD_WORD) {
-        return commandPhrase;
-    }
+    if (wordPosition < FIRST_WORD || wordPosition > THIRD_WORD) return commandPhrase;
 
-    std::string command = commandPhrase;
+    std::string phrase = commandPhrase;
     std::string word;
 
     for (auto i = 0; i < wordPosition; i++) {
         // remove leading whitespace
-        command = command.substr(command.find_first_not_of(" "));
+        phrase = phrase.substr(phrase.find_first_not_of(" "));
         // copy leftmost word of command phrase
-        word = command.substr(0, command.find(" "));
+        word = phrase.substr(0, phrase.find(" "));
         // remove leftmost word from command phrase
-        command = command.substr(word.length());
+        phrase = phrase.substr(word.length());
     }
     return word;
 }

@@ -38,13 +38,13 @@ public:
     ~Parser();
     bool theFileHasMoreCommands();
     void advance();
-    commandTypes commandType();
-    std::string arg1();
-    int arg2();
+    commandTypes commandType() const;
+    std::string arg1() const;
+    int arg2() const;
 private:
     bool isBlank(std::string line) const;
     bool isComment(std::string line) const;
-    std::string returnWordFromCommandPhrase(int number);
+    std::string extractFromCommandPhrase(int wordPosition) const;
     std::ifstream vmFile;
     std::string commandPhrase;
 };
