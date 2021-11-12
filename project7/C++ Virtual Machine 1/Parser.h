@@ -26,7 +26,6 @@ enum class commandTypes
 #define C_FUNCTION   commandTypes::c_function
 #define C_RETURN     commandTypes::c_return
 #define C_CALL       commandTypes::c_call
-
 #define C_NONE       commandTypes::c_none
 
 // The Parser class handles the parsing of a single .vm file, and encapsulates access to the input
@@ -41,7 +40,7 @@ public:
     void advance();
     commandTypes commandType();
     std::string arg1();
-    int arg2() const;
+    int arg2();
 private:
     bool isBlank(std::string line) const;
     bool isComment(std::string line) const;

@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <iostream>
 
+#define FIRST_WORD       1
+#define THIRD_WORD       3
+
 // Opens the input file/stream and gets ready to parse it
 Parser::Parser(std::string filename)
 {
@@ -34,14 +37,19 @@ bool Parser::theFileHasMoreCommands()
     std::string line;
     std::streampos position;
 
+    // skip over all blank lines and comment only lines
     do {
         position = vmFile.tellg();
         std::getline(vmFile, line);
     } while ((isBlank(line) || isComment(line)) && !vmFile.eof());
+
+    // if this is not the last line of the file
     if (!vmFile.eof()) {
         vmFile.seekg(position);
         return true;
+    //this is the last line of the file
     } else {
+        // if the last line of the file is a valid command
         if (!(isBlank(line) || isComment(line))) {
             vmFile.seekg(position);
             return true;
@@ -61,7 +69,7 @@ void Parser::advance()
             commandPhrase = commandPhrase.substr(0, commandPhrase.find("//"));
         }
     } else {
-        commandPhrase = "";
+        commandPhrase = "none";
     }
 }
 
@@ -78,6 +86,7 @@ commandTypes Parser::commandType()
     if (firstWord == "function") return C_FUNCTION;
     if (firstWord == "return") return C_RETURN;
     if (firstWord == "call") return C_CALL;
+    if (firstWord == "none") return C_NONE;
     return C_ARITHMETIC;
 }
 
@@ -85,27 +94,24 @@ commandTypes Parser::commandType()
 // itself (add, sub,etc.) is returned. Should not be called if the current command is C_RETURN.
 std::string Parser::arg1()
 {
-    if (commandType() == C_RETURN) exit(1);
     if (commandType() == C_ARITHMETIC) return returnWordFromCommandPhrase(1);
+    if (commandType() == C_RETURN || commandType() == C_NONE) return "";
     return returnWordFromCommandPhrase(2);
 }
 
 // Returns the second argument of the current command. Should be called only if the current command
 // is C_PUSH, C_POP, C_FUNCTION, or C_CALL.
-int Parser::arg2() const
+int Parser::arg2()
 {
-    /*
-    switch (_commandType) {
+    switch (commandType()) {
     case C_PUSH:
     case C_POP:
     case C_FUNCTION:
     case C_CALL:
-        return _arg2;
+        return stoi(returnWordFromCommandPhrase(3));
     default:
-        exit(1); // return NULL; instead?
+        return 0;
     }
-    */
-    return 0;
 }
 
 // Checks whether its input string is completely whitespace
@@ -131,17 +137,24 @@ bool Parser::isComment(std::string line) const
     return false;
 }
 
-std::string Parser::returnWordFromCommandPhrase(int number)
+// Returns the specified word from the string stored in the commandPhrase
+// member variable
+std::string Parser::returnWordFromCommandPhrase(int wordPosition)
 {
-    std::string leftover = commandPhrase;
+    if (wordPosition < FIRST_WORD || wordPosition > THIRD_WORD) {
+        return commandPhrase;
+    }
+
+    std::string command = commandPhrase;
     std::string word;
 
-    if (number < 1 || number > 3) return leftover;
-
-    for (auto i = 0; i < number; i++) {
-        leftover = leftover.substr(leftover.find_first_not_of(" "));
-        word = leftover.substr(0, leftover.find(" "));
-        leftover = leftover.substr(word.length());
+    for (auto i = 0; i < wordPosition; i++) {
+        // remove leading whitespace
+        command = command.substr(command.find_first_not_of(" "));
+        // copy leftmost word of command phrase
+        word = command.substr(0, command.find(" "));
+        // remove leftmost word from command phrase
+        command = command.substr(word.length());
     }
     return word;
 }

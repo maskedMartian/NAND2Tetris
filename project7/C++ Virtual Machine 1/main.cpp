@@ -27,14 +27,7 @@ std::string returnWordFromCommandPhrase(int number)
 
 int main()
 {
-    std::cout << "Hello world!\n\n";
-
-    std::cout << "======================================\n";
-    std::cout << "Var0 = ---" << returnWordFromCommandPhrase(0) << "---\n";
-    std::cout << "Var1 = ---" << returnWordFromCommandPhrase(1) << "---\n";
-    std::cout << "Var2 = ---" << returnWordFromCommandPhrase(2) << "---\n";
-    std::cout << "Var3 = ---" << returnWordFromCommandPhrase(3) << "---\n";
-    std::cout << "Var4 = ---" << returnWordFromCommandPhrase(4) << "---\n";
+    
 
     return 0;
 }
