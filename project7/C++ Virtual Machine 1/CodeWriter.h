@@ -2,7 +2,6 @@
 
 #include <string>
 
-// The CodeWriter class translates VM commands into HACK assembly code
 enum class PushPopCommands
 {
     c_push,
@@ -12,6 +11,7 @@ enum class PushPopCommands
 #define C_PUSH PushPopCommands::c_push
 #define C_POP  PushPopCommands::c_pop
 
+// The CodeWriter class translates VM commands into HACK assembly code
 class CodeWriter
 {
 public:

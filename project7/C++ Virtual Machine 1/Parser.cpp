@@ -95,7 +95,7 @@ commandTypes Parser::commandType() const
 }
 
 // Returns the first argument of the current command. In the case of C_ARITHMETIC, the command
-// itself (add, sub,etc.) is returned. Should not be called if the current command is C_RETURN.
+// itself (add, sub, etc.) is returned. Should not be called if the current command is C_RETURN.
 std::string Parser::arg1() const
 {
     if (commandType() == C_ARITHMETIC) return extractFromCommandPhrase(FIRST_WORD);
@@ -143,14 +143,14 @@ bool Parser::isComment(std::string line) const
 
 // Returns the specified word from the string stored in the commandPhrase
 // member variable
-std::string Parser::extractFromCommandPhrase(int wordPosition) const
+std::string Parser::extractFromCommandPhrase(int positionOfTheWord) const
 {
-    if (wordPosition < FIRST_WORD || wordPosition > THIRD_WORD) return commandPhrase;
+    if (positionOfTheWord < FIRST_WORD || positionOfTheWord > THIRD_WORD) return commandPhrase;
 
     std::string phrase = commandPhrase;
     std::string word;
 
-    for (auto i = 0; i < wordPosition; i++) {
+    for (auto i = 0; i < positionOfTheWord; i++) {
         // remove leading whitespace
         phrase = phrase.substr(phrase.find_first_not_of(" "));
         // copy leftmost word of command phrase
