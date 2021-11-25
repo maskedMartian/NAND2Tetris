@@ -31,13 +31,13 @@ Project 6: HACK assembler
   operations (and, or, not), memory access operations, and conditional branching
   instructions (jumps).
 * HACK jump instructions:
-    JEQ - jump if equal to zero
-    JNE - jump if not equal to zero
-    JGT - jump if greater than zero
-    JLT - jump if less than zero
-    JGE - jump if greater than or equal to zero
-    JLE - jump if less than or equalt to zero
-    JMP - jump (unconditional)
+    - JEQ - jump if equal to zero
+    - JNE - jump if not equal to zero
+    - JGT - jump if greater than zero
+    - JLT - jump if less than zero
+    - JGE - jump if greater than or equal to zero
+    - JLE - jump if less than or equalt to zero
+    - JMP - jump (unconditional)
 * HACK allows the use of labels and variable names for memory locations
 * HACK uses all alphanumeric characters as well as the special characters
   @ ( ) ; the math symbols + - = and the logic symbols & | !
@@ -69,30 +69,30 @@ Project 6: HACK assembler
 * User defined symbols (labels and variable names) are copied to the symbol
   table starting with address 16 and continuing from there
 * A HACK assembly program terminates when it detects an infinite loop
-* An example of a simple HACK assembly program:
-    // Adds 1 + 2 + ... + 100
-        @i
-        M=1     // i = 1
-        @sum
-        M=0     // sum = 0
-    (LOOP)
-        @i
-        D=M     // D = i
-        @100
-        D=D-A   // D = i - 100
-        @END
-        D;JGT   // if D > 0 goto END
-        @i
-        D=M     // D = i
-        @sum
-        M=D+M   // sum = sum + 1
-        @i
-        M=M+1   // i = i + 1
-        @LOOP
-        0;JMP   // goto loop
-    (END)
-        @END
-        0;JMP   // inifinite loop
+* An example of a simple HACK assembly program:<br>
+    // Adds 1 + 2 + ... + 100<br>
+        @i<br>
+        M=1     // i = 1<br>
+        @sum<br>
+        M=0     // sum = 0<br>
+    (LOOP)<br>
+        @i<br>
+        D=M     // D = i<br>
+        @100<br>
+        D=D-A   // D = i - 100<br>
+        @END<br>
+        D;JGT   // if D > 0 goto END<br>
+        @i<br>
+        D=M     // D = i<br>
+        @sum<br>
+        M=D+M   // sum = sum + 1<br>
+        @i<br>
+        M=M+1   // i = i + 1<br>
+        @LOOP<br>
+        0;JMP   // goto loop<br>
+    (END)<br>
+        @END<br>
+        0;JMP   // inifinite loop<br>
 * In the example program above, the following symbols are added to the symbol
   table (followed by memory address):
     - i     16
