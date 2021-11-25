@@ -39,7 +39,7 @@ Project 6: HACK assembler
     - JLE - jump if less than or equalt to zero
     - JMP - jump (unconditional)
 * HACK allows the use of labels and variable names for memory locations
-* HACK uses all alphanumeric characters as well as the special characters
+* HACK uses all alphanumeric characters as well as the special characters:<br>
   @ ( ) ; the math symbols + - = and the logic symbols & | !
 * HACK uses the character combination // for single line comments
 * HACK allows the use of two registers in the CPU, D and A
@@ -52,8 +52,8 @@ Project 6: HACK assembler
   where M is memory (RAM) and the value held in A is the memory address
 * The A register can be loaded with constants or variables - the use of the @
   symbol followed by a value loads that value into the A register
-  Examples:
-      @10  // loads the value 10 into the A register
+  Examples:<br>
+      @10  // loads the value 10 into the A register<br>
       @myVariable  // loads the contents of myVariable into the A register
 * labels for jump instructions are surrounded by ( and )
 * HACK has 23 predefined symbols in its symbol table (each is followed by its
