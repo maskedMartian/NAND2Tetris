@@ -1,25 +1,37 @@
 #pragma once
 
+#include <fstream>
+#include <map>
 #include <string>
 
-enum class PushPopCommands
-{
-    c_push,
-    c_pop
-};
-
-#define C_PUSH PushPopCommands::c_push
-#define C_POP  PushPopCommands::c_pop
+#include "CommandTypes.h"
 
 // The CodeWriter class translates VM commands into HACK assembly code
 class CodeWriter
 {
 public:
-    CodeWriter(/*output file stream*/);
-    void setFileName(std::string fileName);
+    CodeWriter(std::string filename);
+    ~CodeWriter();
+    void setFileName(std::string filename);
     void writeArithmetic(std::string command);
-    void WritePushPop(PushPopCommands command, std::string segment, int index);
+    void WritePushPop(CommandTypes command, std::string segment, int index);
     void close();
 private:
-
+    void popStackToRegisterA();
+    void popStackToRegisterD();
+    void pushRegisterDToStack();
+    std::string currentFile;
+    std::ofstream asmFile;
+    enum ops { add, sub, neg, eq, gt, lt, NOT, AND, OR };
+    std::map<std::string, ops> operation = {
+        { "add", add },
+        { "sub", sub },
+        { "neg", neg },
+        { "MD",  eq },
+        { "A",   lt },
+        { "AM",  gt },
+        { "AD",  NOT },
+        { "AMD", AND },
+        { "AMD", OR }
+    };
 };

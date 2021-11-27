@@ -78,7 +78,7 @@ void Parser::advance()
 }
 
 // Returns the type of the current VM command
-commandTypes Parser::commandType() const
+CommandTypes Parser::commandType() const
 {
     const std::string firstWord = extractFromCommandPhrase(FIRST_WORD);
     
