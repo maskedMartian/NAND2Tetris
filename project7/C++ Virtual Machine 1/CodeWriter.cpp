@@ -23,29 +23,41 @@ void CodeWriter::setFileName(std::string filename)
     asmFile.open(currentFile);
 }
 
-// Writes the assembly code that is that is the translation of the given arithmetic command
+// Writes the assembly code to the assembly file that is that is the translation of the given
+// arithmetic command
 void CodeWriter::writeArithmetic(std::string command)
 {
-    switch (operation[command]) {
-    case add:
-        popStackToRegisterD();
-        popStackToRegisterA();
-        asmFile << "D=D+M\n";
-        pushRegisterDToStack();
-        break;
-    case sub:
-        popStackToRegisterD();
-        popStackToRegisterA();
-        asmFile << "D=D-M\n";
-        pushRegisterDToStack();
-        break;
-    default:
-        break;
+    popStackToRegisterD();
+    if (command == "neg" || command == "not") {
+        asmFile << "D="
+                << ((command == "neg") ? "-" : "!")
+                << "D\n";
+    } else {
+        popStackToRegisterM();
+        switch (operation[command]) {
+        case add:
+            asmFile << "D=D+M\n";
+            break;
+        case sub:
+            asmFile << "D=M-D\n";
+            break;
+        case AND:
+            asmFile << "D=D&M\n";
+            break;
+        case OR:
+            asmFile << "D=D|M\n";
+            break;
+            // "eq", "lt", or "gt"
+        default:
+            compareRegistersMAndD(command);
+            break;
+        }
     }
+    pushRegisterDToStack();
 }
 
-// Writes the assembly code that is the translation of the given command, where command is C_PUSH
-// or C_POP
+// Writes the assembly code to the assembly file that is the translation of the given command, where
+// command is C_PUSH or C_POP
 void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
 {
     if (command == C_PUSH) {
@@ -68,27 +80,47 @@ void CodeWriter::close()
     asmFile.close();
 }
 
-// Print assembly commands to assembly file that will pop a value from the stack into register A
-void CodeWriter::popStackToRegisterA()
+// Writes the assembly code to the assembly file that will pop a value from the stack into
+// register M
+void CodeWriter::popStackToRegisterM()
 {
     asmFile << "@SP\n"
             << "M=M-1\n"
             << "A=M\n";
 }
 
-// Print assembly commands to assembly file that will pop a value from the stack into register D
+// Writes the assembly code to the assembly file that will pop a value from the stack into
+// register D
 void CodeWriter::popStackToRegisterD()
 {
-    popStackToRegisterA();
+    popStackToRegisterM();
     asmFile << "D=M\n";
 }
 
-//
+// Writes the assembly code to the assembly file that will push the value in register D to the stack
 void CodeWriter::pushRegisterDToStack()
 {
     asmFile << "@SP\n"
-        << "A=M\n"
-        << "M=D\n"
-        << "@SP\n"
-        << "M=M+1\n";
+            << "A=M\n"
+            << "M=D\n"
+            << "@SP\n"
+            << "M=M+1\n";
+}
+
+// Writes the assembly code to the assembly file that will compare the value in register M to the
+// value in register D using the supplied command
+void CodeWriter::compareRegistersMAndD(std::string command)
+{
+    command = 'j' + command;
+    for (auto& ch : command) ch = toupper(ch);
+    asmFile << "D=M-D\n"
+            << "@TRUE" << labelCounter << "\n"
+            << "D;" << command << "\n"
+            << "D=0\n"
+            << "@END" << labelCounter << "\n"
+            << "0;JMP\n"
+            << "(TRUE" << labelCounter << ")\n"
+            << "D=-1\n"
+            << "(END" << labelCounter << ")\n";
+    labelCounter++;
 }

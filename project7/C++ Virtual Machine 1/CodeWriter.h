@@ -17,21 +17,21 @@ public:
     void WritePushPop(CommandTypes command, std::string segment, int index);
     void close();
 private:
-    void popStackToRegisterA();
+    void popStackToRegisterM();
     void popStackToRegisterD();
     void pushRegisterDToStack();
+    void compareRegistersMAndD(std::string command);
     std::string currentFile;
     std::ofstream asmFile;
-    enum ops { add, sub, neg, eq, gt, lt, NOT, AND, OR };
+    int labelCounter = 0;
+    enum ops{ add, sub, eq, gt, lt, AND, OR };
     std::map<std::string, ops> operation = {
         { "add", add },
         { "sub", sub },
-        { "neg", neg },
-        { "MD",  eq },
-        { "A",   lt },
-        { "AM",  gt },
-        { "AD",  NOT },
-        { "AMD", AND },
-        { "AMD", OR }
+        { "eq",  eq },
+        { "lt",  lt },
+        { "gt",  gt },
+        { "and", AND },
+        { "or",  OR }
     };
 };
