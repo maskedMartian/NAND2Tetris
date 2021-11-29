@@ -65,15 +65,46 @@ void CodeWriter::writeArithmetic(std::string command)
 void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
 {
     if (command == C_PUSH) {
-        if (segment == "constant") {
+        switch (segments[segment]) {
+        case argument:
+            break;
+        case local:
+            break;
+        case STATIC:
+            break;
+        case constant:
             asmFile << "@" << index << "\n"
                     << "D=A\n";
             pushRegisterDToStack();
+            break;
+        case THIS:
+            break;
+        case that:
+            break;
+        case pointer:
+            break;
+        case temp:
+            break;
         }
-    // command == C_POP
+    // (command == C_POP)
     } else {
-        if (segment == "constant") {
-
+        switch (segments[segment]) {
+        case argument:
+            break;
+        case local:
+            break;
+        case STATIC:
+            break;
+        case constant:
+            break;
+        case THIS:
+            break;
+        case that:
+            break;
+        case pointer:
+            break;
+        case temp:
+            break;
         }
     }
 }

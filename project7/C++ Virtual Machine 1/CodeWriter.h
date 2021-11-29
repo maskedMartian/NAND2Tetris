@@ -30,10 +30,21 @@ private:
     std::map<std::string, ops> operation = {
         { "add", add },
         { "sub", sub },
-        { "eq",  eq },
-        { "lt",  lt },
-        { "gt",  gt },
+        { "eq", eq },
+        { "lt", lt },
+        { "gt", gt },
         { "and", AND },
-        { "or",  OR }
+        { "or", OR }
+    };
+    enum segs{ argument, local, STATIC, constant, THIS, that, pointer, temp };
+    std::map<std::string, segs> segments = {
+        { "argument", argument },
+        { "local", local },
+        { "STATIC", STATIC },
+        { "constant", constant },
+        { "THIS", THIS },
+        { "that", that },
+        { "pointer", pointer },
+        { "temp", temp }
     };
 };

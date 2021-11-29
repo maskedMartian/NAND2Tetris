@@ -87,3 +87,5 @@ project7/C++ Virtual Machine 1/Debug/C++ Virt.0cb6344e.tlog/link.command.1.tlog
 project7/C++ Virtual Machine 1/Debug/C++ Virt.0cb6344e.tlog/link.read.1.tlog
 project7/C++ Virtual Machine 1/Debug/C++ Virt.0cb6344e.tlog/link.write.1.tlog
 project7/C++ Virtual Machine 1/Debug/C++ Virt.0cb6344e.tlog/unsuccessfulbuild
+*.asm
+*.vm
