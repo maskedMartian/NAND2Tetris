@@ -123,5 +123,6 @@ void CodeWriter::compareRegistersMAndD(std::string command)
             << "0;JMP\n"
             << "(TRUE" << labelCounter << ")\n"
             << "D=-1\n"
-            << "(END" << labelCounter++ << ")\n";
+            << "(END" << labelCounter << ")\n";
+    labelCounter++;
 }

@@ -14,8 +14,8 @@ each one of them.
 
 int main()
 {
-    Parser parser("test1.vm");
-    CodeWriter codeWriter("test1.vm");
+    Parser parser("StackTest.vm");
+    CodeWriter codeWriter("StackTest.vm");
 
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
