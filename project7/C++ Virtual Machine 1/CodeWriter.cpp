@@ -28,12 +28,14 @@ void CodeWriter::setFileName(std::string filename)
 void CodeWriter::writeArithmetic(std::string command)
 {
     popStackToRegisterD();
+    // unary operations
     if (command == "neg" || command == "not") {
         asmFile << "D="
                 << ((command == "neg") ? "-" : "!")
                 << "D\n";
     } else {
         popStackToRegisterM();
+        // binary operations
         switch (operation[command]) {
         case add:
             asmFile << "D=D+M\n";
@@ -121,6 +123,5 @@ void CodeWriter::compareRegistersMAndD(std::string command)
             << "0;JMP\n"
             << "(TRUE" << labelCounter << ")\n"
             << "D=-1\n"
-            << "(END" << labelCounter << ")\n";
-    labelCounter++;
+            << "(END" << labelCounter++ << ")\n";
 }

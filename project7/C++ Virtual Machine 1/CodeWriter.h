@@ -6,7 +6,8 @@
 
 #include "CommandTypes.h"
 
-// The CodeWriter class translates VM commands into HACK assembly code
+// The CodeWriter class translates VM commands into HACK assembly code and writes it to an assembly
+// file
 class CodeWriter
 {
 public:
