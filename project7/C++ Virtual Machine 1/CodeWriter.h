@@ -22,6 +22,7 @@ private:
     void popStackToRegisterD();
     void pushRegisterDToStack();
     void compareRegistersMAndD(std::string command);
+    void addEndOfProgramCode();
     std::string currentFile;
     std::ofstream asmFile;
     int labelCounter = 0;

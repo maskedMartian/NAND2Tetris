@@ -11,6 +11,7 @@ CodeWriter::CodeWriter(std::string filename)
 CodeWriter::~CodeWriter()
 {
     if (asmFile.is_open()) {
+        addEndOfProgramCode();
         asmFile.close();
     }
 }
@@ -18,6 +19,7 @@ CodeWriter::~CodeWriter()
 // Informs the code writer that the translation of a new VM file is started
 void CodeWriter::setFileName(std::string filename)
 {
+    addEndOfProgramCode();
     asmFile.close();
     currentFile = filename.substr(0, filename.find('.')) + ".asm";
     asmFile.open(currentFile);
@@ -125,4 +127,13 @@ void CodeWriter::compareRegistersMAndD(std::string command)
             << "D=-1\n"
             << "(END" << labelCounter << ")\n";
     labelCounter++;
+}
+
+// Writes the assembly code to the assembly file that will signal the end of the program with an
+// infinite loop
+void CodeWriter::addEndOfProgramCode()
+{
+    asmFile << "(END)\n"
+            << "@END\n"
+            << "0;JMP\n";
 }
