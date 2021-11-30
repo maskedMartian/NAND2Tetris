@@ -23,6 +23,8 @@ private:
     void pushRegisterDToStack();
     void compareRegistersMAndD(std::string command);
     void addEndOfProgramCode();
+    void loadSegmentAddressIntoRegisterA(std::string segment, int index);
+    void newFunct();
     std::string currentFile;
     std::ofstream asmFile;
     int labelCounter = 0;

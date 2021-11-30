@@ -67,45 +67,62 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
     if (command == C_PUSH) {
         switch (segments[segment]) {
         case argument:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case local:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case STATIC:
+            // xxx xxx xxx xxx
             break;
         case constant:
             asmFile << "@" << index << "\n"
                     << "D=A\n";
-            pushRegisterDToStack();
             break;
         case THIS:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case that:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case pointer:
+            // xxx xxx xxx xxx
             break;
         case temp:
+            asmFile << "@R" << (index + 5) << "\n"
+                    << "D=M\n";
             break;
         }
+        pushRegisterDToStack();
     // (command == C_POP)
     } else {
         switch (segments[segment]) {
         case argument:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case local:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case STATIC:
+            // xxx xxx xxx xxx
             break;
         case constant:
+            // xxx xxx xxx xxx
             break;
         case THIS:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case that:
+            loadSegmentAddressIntoRegisterA(segment, index);
             break;
         case pointer:
+            // xxx xxx xxx xxx
             break;
         case temp:
+            asmFile << "@R" << (index + 5) << "\n";
             break;
         }
+        newFunct();
     }
 }
 
@@ -167,4 +184,27 @@ void CodeWriter::addEndOfProgramCode()
     asmFile << "(END)\n"
             << "@END\n"
             << "0;JMP\n";
+}
+
+// Writes the assembly code to the assembly file that will load the indexed address in the specified
+// segment of RAM
+void CodeWriter::loadSegmentAddressIntoRegisterA(std::string segment, int index)
+{
+    asmFile << "@" << segment << "\n"
+            << "D=M\n"
+            << "@" << index << "\n"
+            << "A=D+A\n";
+}
+
+void CodeWriter::newFunct()
+{
+    // copy the segment address from register A to RAM[13]
+    asmFile << "D=A\n"
+            << "@R13\n"
+            << "M=D\n";
+    popStackToRegisterD();
+    // copy the contents of register D to the memory segment address stored in RAM[13]
+    asmFile << "@R13\n"
+            << "A=M\n"
+            << "M=D\n";
 }
