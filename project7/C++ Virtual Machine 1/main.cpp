@@ -19,7 +19,8 @@ int main()
 
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
-        if (parser.commandType() == C_PUSH) {
+        // codeWriter.addLineCount();
+        if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
             codeWriter.WritePushPop(parser.commandType(), parser.arg1(), parser.arg2());
         } else {
             codeWriter.writeArithmetic(parser.arg1());

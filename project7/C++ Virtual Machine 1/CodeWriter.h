@@ -13,6 +13,14 @@ class CodeWriter
 public:
     CodeWriter(std::string filename);
     ~CodeWriter();
+
+    void addLineCount()
+    {
+        static int lineCount = 1;
+        asmFile << "\n==== " << "// Line " << lineCount << " ====\n";
+        lineCount++;
+    }
+
     void setFileName(std::string filename);
     void writeArithmetic(std::string command);
     void WritePushPop(CommandTypes command, std::string segment, int index);
@@ -44,7 +52,7 @@ private:
         { "local", local },
         { "STATIC", STATIC },
         { "constant", constant },
-        { "THIS", THIS },
+        { "this", THIS },
         { "that", that },
         { "pointer", pointer },
         { "temp", temp }

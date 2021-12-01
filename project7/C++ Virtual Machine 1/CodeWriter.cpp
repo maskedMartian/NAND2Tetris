@@ -65,12 +65,17 @@ void CodeWriter::writeArithmetic(std::string command)
 void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
 {
     if (command == C_PUSH) {
+        // push the value of segment[index] onto the stack
         switch (segments[segment]) {
         case argument:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("ARG", index);
+            // copy value at segment[index] into D register
+            asmFile << "D=M\n";
             break;
         case local:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("LCL", index);
+            // copy value at segment[index] into D register
+            asmFile << "D=M\n";
             break;
         case STATIC:
             // xxx xxx xxx xxx
@@ -80,10 +85,14 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
                     << "D=A\n";
             break;
         case THIS:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("THIS", index);
+            // copy value at segment[index] into D register
+            asmFile << "D=M\n";
             break;
         case that:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("THAT", index);
+            // copy value at segment[index] into D register
+            asmFile << "D=M\n";
             break;
         case pointer:
             // xxx xxx xxx xxx
@@ -96,12 +105,13 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
         pushRegisterDToStack();
     // (command == C_POP)
     } else {
+        // pop the stack and store the value in segment[index]
         switch (segments[segment]) {
         case argument:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("ARG", index);
             break;
         case local:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("LCL", index);
             break;
         case STATIC:
             // xxx xxx xxx xxx
@@ -110,10 +120,10 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             // xxx xxx xxx xxx
             break;
         case THIS:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("THIS", index);
             break;
         case that:
-            loadSegmentAddressIntoRegisterA(segment, index);
+            loadSegmentAddressIntoRegisterA("THAT", index);
             break;
         case pointer:
             // xxx xxx xxx xxx
