@@ -78,7 +78,8 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             asmFile << "D=M\n";
             break;
         case STATIC:
-            // xxx xxx xxx xxx
+            asmFile << "@" << currentFile.substr(0, currentFile.find('.') + 1) << index << "\n"
+                    << "D=M\n";
             break;
         case constant:
             asmFile << "@" << index << "\n"
@@ -95,7 +96,8 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             asmFile << "D=M\n";
             break;
         case pointer:
-            // xxx xxx xxx xxx
+            asmFile << "@R" << (index + 3) << "\n"
+                    << "D=M\n";
             break;
         case temp:
             asmFile << "@R" << (index + 5) << "\n"
@@ -114,10 +116,7 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             loadSegmentAddressIntoRegisterA("LCL", index);
             break;
         case STATIC:
-            // xxx xxx xxx xxx
-            break;
-        case constant:
-            // xxx xxx xxx xxx
+            asmFile << "@" << currentFile.substr(0, currentFile.find('.') + 1) << index << "\n";
             break;
         case THIS:
             loadSegmentAddressIntoRegisterA("THIS", index);
@@ -126,7 +125,7 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             loadSegmentAddressIntoRegisterA("THAT", index);
             break;
         case pointer:
-            // xxx xxx xxx xxx
+            asmFile << "@R" << (index + 3) << "\n";
             break;
         case temp:
             asmFile << "@R" << (index + 5) << "\n";

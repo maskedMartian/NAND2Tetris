@@ -50,7 +50,7 @@ private:
     std::map<std::string, segs> segments = {
         { "argument", argument },
         { "local", local },
-        { "STATIC", STATIC },
+        { "static", STATIC },
         { "constant", constant },
         { "this", THIS },
         { "that", that },
