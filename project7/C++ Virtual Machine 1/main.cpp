@@ -14,12 +14,11 @@ each one of them.
 
 int main()
 {
-    Parser parser("StaticTest.vm");
-    CodeWriter codeWriter("StaticTest.vm");
+    Parser parser("StackTest.vm");
+    CodeWriter codeWriter("StackTest.vm");
 
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
-        // codeWriter.addLineCount();
         if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
             codeWriter.WritePushPop(parser.commandType(), parser.arg1(), parser.arg2());
         } else {

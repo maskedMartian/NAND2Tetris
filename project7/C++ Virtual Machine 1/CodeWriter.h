@@ -13,14 +13,6 @@ class CodeWriter
 public:
     CodeWriter(std::string filename);
     ~CodeWriter();
-
-    void addLineCount()
-    {
-        static int lineCount = 1;
-        asmFile << "\n==== " << "// Line " << lineCount << " ====\n";
-        lineCount++;
-    }
-
     void setFileName(std::string filename);
     void writeArithmetic(std::string command);
     void WritePushPop(CommandTypes command, std::string segment, int index);
@@ -32,7 +24,12 @@ private:
     void compareRegistersMAndD(std::string command);
     void addEndOfProgramCode();
     void loadSegmentAddressIntoRegisterA(std::string segment, int index);
-    void newFunct();
+    void copyAddressFromRegisterAToR13();
+    void copyRegisterDToAddressStoredInR13();
+    void setRegisterDEqualToRegister(std::string register);
+    void loadConstantValueIntoRegisterA(int index);
+    void loadRAMAddressIntoRegisterA(int address);
+    void loadAddressOfStaticVariableIntoRegisterA(int index);
     std::string currentFile;
     std::ofstream asmFile;
     int labelCounter = 0;
