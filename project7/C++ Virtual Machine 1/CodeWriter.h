@@ -24,11 +24,11 @@ private:
     void compareRegistersMAndD(std::string command);
     void addEndOfProgramCode();
     void loadSegmentAddressIntoRegisterA(std::string segment, int index);
-    void copyAddressFromRegisterAToR13();
-    void copyRegisterDToAddressStoredInR13();
+    void copyAddressFromRegisterAToRam(int address);
+    void copyRegisterDToAddressStoredInRam(int address);
     void setRegisterDEqualToRegister(std::string register);
     void loadConstantValueIntoRegisterA(int index);
-    void loadRAMAddressIntoRegisterA(int address);
+    void loadRamAddressIntoRegisterA(int address);
     void loadAddressOfStaticVariableIntoRegisterA(int index);
     std::string currentFile;
     std::ofstream asmFile;

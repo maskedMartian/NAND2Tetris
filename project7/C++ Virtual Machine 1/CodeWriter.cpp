@@ -1,5 +1,9 @@
 #include "CodeWriter.h"
 
+#define POINTER_SEGMENT (index + 3)
+#define TEMP_SEGMENT    (index + 5)
+#define R13             13
+
 // Opens the output file/stream and gets ready to write into it
 CodeWriter::CodeWriter(std::string filename)
 {
@@ -64,6 +68,8 @@ void CodeWriter::writeArithmetic(std::string command)
 // command is C_PUSH or C_POP
 void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
 {
+    std::string regs = "M";
+
     if (command == C_PUSH) {
         // push the value of segment[index] onto the stack
         switch (segments[segment]) {
@@ -75,11 +81,10 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             break;
         case STATIC:
             loadAddressOfStaticVariableIntoRegisterA(index);
-            // asmFile << "@" << currentFile.substr(0, currentFile.find('.') + 1) << index << "\n";
             break;
         case constant:
             loadConstantValueIntoRegisterA(index);
-            //asmFile << "@" << index << "\n";
+            regs = "A";
             break;
         case THIS:
             loadSegmentAddressIntoRegisterA("THIS", index);
@@ -88,15 +93,13 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             loadSegmentAddressIntoRegisterA("THAT", index);
             break;
         case pointer:
-            loadRAMAddressIntoRegisterA(index + 3);
-            // asmFile << "@R" << (index + 3) << "\n";
+            loadRamAddressIntoRegisterA(POINTER_SEGMENT);
             break;
         case temp:
-            loadRAMAddressIntoRegisterA(index + 5);
-            // asmFile << "@R" << (index + 5) << "\n";
+            loadRamAddressIntoRegisterA(TEMP_SEGMENT);
             break;
         }
-        setRegisterDEqualToRegister(segment == "constant" ? "A" : "M");
+        setRegisterDEqualToRegister(regs);
         pushRegisterDToStack();
     // (command == C_POP)
     } else {
@@ -110,7 +113,6 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             break;
         case STATIC:
             loadAddressOfStaticVariableIntoRegisterA(index);
-            // asmFile << "@" << currentFile.substr(0, currentFile.find('.') + 1) << index << "\n";
             break;
         case THIS:
             loadSegmentAddressIntoRegisterA("THIS", index);
@@ -119,17 +121,15 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             loadSegmentAddressIntoRegisterA("THAT", index);
             break;
         case pointer:
-            loadRAMAddressIntoRegisterA(index + 3);
-            // asmFile << "@R" << (index + 3) << "\n";
+            loadRamAddressIntoRegisterA(POINTER_SEGMENT);
             break;
         case temp:
-            loadRAMAddressIntoRegisterA(index + 5);
-            // asmFile << "@R" << (index + 5) << "\n";
+            loadRamAddressIntoRegisterA(TEMP_SEGMENT);
             break;
         }
-        copyAddressFromRegisterAToR13();
+        copyAddressFromRegisterAToRam(R13);
         popStackToRegisterD();
-        copyRegisterDToAddressStoredInR13();
+        copyRegisterDToAddressStoredInRam(R13);
     }
 }
 
@@ -205,18 +205,18 @@ void CodeWriter::loadSegmentAddressIntoRegisterA(std::string segment, int index)
 
 // Writes the assembly code to the assembly file that will copy the segment address from register A
 // to RAM[13]
-void CodeWriter::copyAddressFromRegisterAToR13()
+void CodeWriter::copyAddressFromRegisterAToRam(int address)
 {
     asmFile << "D=A\n"
-            << "@R13\n"
+            << "@R" << address << "\n"
             << "M=D\n";
 }
 
 // Writes the assembly code to the assembly file that will copy the contents of register D to the
 // memory segment address stored in RAM[13]
-void CodeWriter::copyRegisterDToAddressStoredInR13()
+void CodeWriter::copyRegisterDToAddressStoredInRam(int address)
 {
-    asmFile << "@R13\n"
+    asmFile << "@R" << address << "\n"
             << "A=M\n"
             << "M=D\n";
 }
@@ -228,19 +228,20 @@ void CodeWriter::setRegisterDEqualToRegister(std::string registerAorM)
     asmFile << "D=" << registerAorM << "\n";
 }
 
-// Writes...
+// Writes the assembly code to the assembly file that will load a constant value into register A
 void CodeWriter::loadConstantValueIntoRegisterA(int index)
 {
     asmFile << "@" << index << "\n";
 }
 
-//Writes...
-void CodeWriter::loadRAMAddressIntoRegisterA(int address)
+// Writes the assembly code to the assembly file that will load R0-R15 into register A
+void CodeWriter::loadRamAddressIntoRegisterA(int address)
 {
     asmFile << "@R" << address << "\n";
 }
 
-//Writes...
+// Writes the assembly code to the assembly file that will load the memory address of a static
+// variable into register A
 void CodeWriter::loadAddressOfStaticVariableIntoRegisterA(int index)
 {
     asmFile << "@" << currentFile.substr(0, currentFile.find('.') + 1) << index << "\n";
