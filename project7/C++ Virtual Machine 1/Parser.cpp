@@ -7,7 +7,6 @@
 #define FIRST_WORD            1
 #define SECOND_WORD           2
 #define THIRD_WORD            3
-#define CHARS_IN_EXTENSION    3
 
 // Opens the input file/stream and gets ready to parse it
 Parser::Parser(std::string filename)
