@@ -48,8 +48,7 @@ void translateFile(std::string filename)
         parser.advance();
         if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
             codeWriter.WritePushPop(parser.commandType(), parser.arg1(), parser.arg2());
-        }
-        else {
+        } else {
             codeWriter.writeArithmetic(parser.arg1());
         }
     }

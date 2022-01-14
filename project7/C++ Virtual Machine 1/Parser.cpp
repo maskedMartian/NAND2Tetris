@@ -15,8 +15,7 @@ Parser::Parser(std::string filename)
     if (filename.substr(filename.length() - CHARS_IN_EXTENSION, CHARS_IN_EXTENSION) != ".vm") {
         std::cout << "ERROR: VM file expected\n";
         exit(ERROR);
-    }
-    else {
+    } else {
         vmFile.open(filename);
         if (vmFile.fail()) {
             std::cout << "ERROR: Something went wrong trying to open the necessary files\n";
