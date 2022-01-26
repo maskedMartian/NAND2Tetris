@@ -26,7 +26,7 @@ private:
     void loadSegmentAddressIntoRegisterA(std::string segment, int index);
     void copyAddressFromRegisterAToRam(int address);
     void copyRegisterDToAddressStoredInRam(int address);
-    void setRegisterDEqualToRegister(std::string register);
+    void setRegisterDEqualToRegister(std::string registerAorM);
     void loadConstantValueIntoRegisterA(int index);
     void loadRamAddressIntoRegisterA(int address);
     void loadAddressOfStaticVariableIntoRegisterA(int index);

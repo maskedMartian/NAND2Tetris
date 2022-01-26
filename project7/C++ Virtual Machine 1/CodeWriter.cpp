@@ -68,7 +68,7 @@ void CodeWriter::writeArithmetic(std::string command)
 // command is C_PUSH or C_POP
 void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
 {
-    std::string regs = "M";
+    std::string registerAorM = "M";
 
     if (command == C_PUSH) {
         // push the value of segment[index] onto the stack
@@ -84,7 +84,7 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             break;
         case constant:
             loadConstantValueIntoRegisterA(index);
-            regs = "A";
+            registerAorM = "A";
             break;
         case THIS:
             loadSegmentAddressIntoRegisterA("THIS", index);
@@ -99,7 +99,7 @@ void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int ind
             loadRamAddressIntoRegisterA(TEMP_SEGMENT);
             break;
         }
-        setRegisterDEqualToRegister(regs);
+        setRegisterDEqualToRegister(registerAorM);
         pushRegisterDToStack();
     // (command == C_POP)
     } else {
