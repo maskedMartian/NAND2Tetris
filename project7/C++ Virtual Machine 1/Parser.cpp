@@ -12,7 +12,7 @@
 Parser::Parser(std::string filename)
 {
     // if the file extension is not .vm
-    if (filename.substr(filename.length() - CHARS_IN_EXTENSION, CHARS_IN_EXTENSION) != ".vm") {
+    if (filename.substr(filename.length() - EXTENSION_LENGTH, EXTENSION_LENGTH) != ".vm") {
         std::cout << "ERROR: VM file expected\n";
         exit(ERROR);
     } else {
@@ -64,15 +64,15 @@ bool Parser::theFileHasMoreCommands()
 // Reads the next command from the input and makes it the current command
 void Parser::advance()
 {
-    if (theFileHasMoreCommands()) {
+    //if (theFileHasMoreCommands()) {
         std::getline(vmFile, commandPhrase);
         // truncate end of line comment
         if (commandPhrase.find("//") != std::string::npos) {
             commandPhrase = commandPhrase.substr(0, commandPhrase.find("//"));
         }
-    } else {
-        commandPhrase = "none";
-    }
+    //} else {
+       // commandPhrase = "none";
+    //}
 }
 
 // Returns the type of the current VM command
@@ -101,8 +101,8 @@ std::string Parser::arg1() const
     return extractFromCommandPhrase(SECOND_WORD);
 }
 
-// Returns the second argument of the current command. Should be called only if the current command
-// is C_PUSH, C_POP, C_FUNCTION, or C_CALL.
+// Returns the second argument of the current command. Should be called only if the current
+// command is C_PUSH, C_POP, C_FUNCTION, or C_CALL.
 int Parser::arg2() const
 {
     switch (commandType()) {

@@ -13,7 +13,6 @@ class CodeWriter
 public:
     CodeWriter(std::string filename);
     ~CodeWriter();
-    void setFileName(std::string filename);
     void writeArithmetic(std::string command);
     void WritePushPop(CommandTypes command, std::string segment, int index);
     void close();

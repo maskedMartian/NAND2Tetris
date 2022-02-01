@@ -20,15 +20,6 @@ CodeWriter::~CodeWriter()
     }
 }
 
-// Informs the code writer that the translation of a new VM file is started
-void CodeWriter::setFileName(std::string filename)
-{
-    addEndOfProgramCode();
-    asmFile.close();
-    currentFile = filename.substr(0, filename.find('.')) + ".asm";
-    asmFile.open(currentFile);
-}
-
 // Writes the assembly code to the assembly file that is that is the translation of the given
 // arithmetic command
 void CodeWriter::writeArithmetic(std::string command)
@@ -244,5 +235,9 @@ void CodeWriter::loadRamAddressIntoRegisterA(int address)
 // variable into register A
 void CodeWriter::loadAddressOfStaticVariableIntoRegisterA(int index)
 {
-    asmFile << "@" << currentFile.substr(0, currentFile.find('.') + 1) << index << "\n";
+    std::string filename = currentFile.substr(0, currentFile.find('.') + 1);
+    while (filename.find('\\') != -1) {
+        filename = filename.substr(filename.find('\\') + 1, std::string::npos);
+    }
+    asmFile << "@" << filename << index << "\n";
 }
