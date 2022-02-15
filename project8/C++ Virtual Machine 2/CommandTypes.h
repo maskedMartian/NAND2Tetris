@@ -10,8 +10,7 @@ enum class CommandTypes
     c_if,
     c_function,
     c_return,
-    c_call,
-    c_none
+    c_call
 };
 
 #define C_ARITHMETIC CommandTypes::c_arithmetic
@@ -23,4 +22,3 @@ enum class CommandTypes
 #define C_FUNCTION   CommandTypes::c_function
 #define C_RETURN     CommandTypes::c_return
 #define C_CALL       CommandTypes::c_call
-#define C_NONE       CommandTypes::c_none

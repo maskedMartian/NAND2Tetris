@@ -88,7 +88,6 @@ CommandTypes Parser::commandType() const
     if (firstWord == "function") return C_FUNCTION;
     if (firstWord == "return") return C_RETURN;
     if (firstWord == "call") return C_CALL;
-    if (firstWord == "none") return C_NONE;
     return C_ARITHMETIC;
 }
 
@@ -97,7 +96,7 @@ CommandTypes Parser::commandType() const
 std::string Parser::arg1() const
 {
     if (commandType() == C_ARITHMETIC) return extractFromCommandPhrase(FIRST_WORD);
-    if (commandType() == C_RETURN || commandType() == C_NONE) return "";
+    if (commandType() == C_RETURN) return "";
     return extractFromCommandPhrase(SECOND_WORD);
 }
 

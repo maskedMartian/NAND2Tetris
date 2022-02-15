@@ -20,7 +20,7 @@ CodeWriter::~CodeWriter()
     }
 }
 
-// Writes the assembly code to the assembly file that is that is the translation of the given
+// Writes the assembly code to the output file that is that is the translation of the given
 // arithmetic command
 void CodeWriter::writeArithmetic(std::string command)
 {
@@ -55,7 +55,7 @@ void CodeWriter::writeArithmetic(std::string command)
     pushRegisterDToStack();
 }
 
-// Writes the assembly code to the assembly file that is the translation of the given command, where
+// Writes the assembly code to the output file that is the translation of the given command, where
 // command is C_PUSH or C_POP
 void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
 {
@@ -130,7 +130,50 @@ void CodeWriter::close()
     asmFile.close();
 }
 
-// Writes the assembly code to the assembly file that will pop a value from the stack into
+// Write assembly code to the output file that effects the VM initialization, also called
+// bootstrap code. This code must be placed at the beginning of the output file.
+void CodeWriter::writeInit()
+{
+
+}
+
+// Writes assembly code to the assembly file that effects the label command.
+void CodeWriter::writeLabel(std::string label)
+{
+
+}
+
+// Writes assembly code to the assembly file that effects the goto command.
+void CodeWriter::writeGoto(std::string label)
+{
+
+}
+
+// Writes assembly code to the assembly file that effects the if-goto command.
+void CodeWriter::writeIf(std::string label)
+{
+
+}
+
+// Writes assembly code to the assembly file that effects the call command.
+void CodeWriter::writeCall(std::string functionName, int numArgs)
+{
+
+}
+
+// Writes assembly code to the assembly file that effects the return command.
+void CodeWriter::writeReturn()
+{
+
+}
+
+// Writes assembly code to the assembly file that effects the function command.
+void CodeWriter::writeFunction(std::string functionName, int numLocals)
+{
+
+}
+
+// Writes the assembly code to the output file that will pop a value from the stack into
 // register M
 void CodeWriter::popStackToRegisterM()
 {
@@ -139,7 +182,7 @@ void CodeWriter::popStackToRegisterM()
             << "A=M\n";
 }
 
-// Writes the assembly code to the assembly file that will pop a value from the stack into
+// Writes the assembly code to the output file that will pop a value from the stack into
 // register D
 void CodeWriter::popStackToRegisterD()
 {
@@ -147,7 +190,7 @@ void CodeWriter::popStackToRegisterD()
     asmFile << "D=M\n";
 }
 
-// Writes the assembly code to the assembly file that will push the value in register D to the stack
+// Writes the assembly code to the output file that will push the value in register D to the stack
 void CodeWriter::pushRegisterDToStack()
 {
     asmFile << "@SP\n"
@@ -157,7 +200,7 @@ void CodeWriter::pushRegisterDToStack()
             << "M=M+1\n";
 }
 
-// Writes the assembly code to the assembly file that will compare the value in register M to the
+// Writes the assembly code to the output file that will compare the value in register M to the
 // value in register D using the supplied command
 void CodeWriter::compareRegistersMAndD(std::string command)
 {
@@ -175,7 +218,7 @@ void CodeWriter::compareRegistersMAndD(std::string command)
     labelCounter++;
 }
 
-// Writes the assembly code to the assembly file that will signal the end of the program with an
+// Writes the assembly code to the output file that will signal the end of the program with an
 // infinite loop
 void CodeWriter::addEndOfProgramCode()
 {
@@ -184,7 +227,7 @@ void CodeWriter::addEndOfProgramCode()
             << "0;JMP\n";
 }
 
-// Writes the assembly code to the assembly file that will load the indexed address in the specified
+// Writes the assembly code to the output file that will load the indexed address in the specified
 // segment of RAM
 void CodeWriter::loadSegmentAddressIntoRegisterA(std::string segment, int index)
 {
@@ -194,7 +237,7 @@ void CodeWriter::loadSegmentAddressIntoRegisterA(std::string segment, int index)
             << "A=D+A\n";
 }
 
-// Writes the assembly code to the assembly file that will copy the segment address from register A
+// Writes the assembly code to the output file that will copy the segment address from register A
 // to RAM[13]
 void CodeWriter::copyAddressFromRegisterAToRam(int address)
 {
@@ -203,7 +246,7 @@ void CodeWriter::copyAddressFromRegisterAToRam(int address)
             << "M=D\n";
 }
 
-// Writes the assembly code to the assembly file that will copy the contents of register D to the
+// Writes the assembly code to the output file that will copy the contents of register D to the
 // memory segment address stored in RAM[13]
 void CodeWriter::copyRegisterDToAddressStoredInRam(int address)
 {
@@ -212,26 +255,26 @@ void CodeWriter::copyRegisterDToAddressStoredInRam(int address)
             << "M=D\n";
 }
 
-// Writes the assembly code to the assembly file that will copy the contents of a register to
+// Writes the assembly code to the output file that will copy the contents of a register to
 // another register
 void CodeWriter::setRegisterDEqualToRegister(std::string registerAorM)
 {
     asmFile << "D=" << registerAorM << "\n";
 }
 
-// Writes the assembly code to the assembly file that will load a constant value into register A
+// Writes the assembly code to the output file that will load a constant value into register A
 void CodeWriter::loadConstantValueIntoRegisterA(int index)
 {
     asmFile << "@" << index << "\n";
 }
 
-// Writes the assembly code to the assembly file that will load R0-R15 into register A
+// Writes the assembly code to the output file that will load R0-R15 into register A
 void CodeWriter::loadRamAddressIntoRegisterA(int address)
 {
     asmFile << "@R" << address << "\n";
 }
 
-// Writes the assembly code to the assembly file that will load the memory address of a static
+// Writes the assembly code to the output file that will load the memory address of a static
 // variable into register A
 void CodeWriter::loadAddressOfStaticVariableIntoRegisterA(int index)
 {
