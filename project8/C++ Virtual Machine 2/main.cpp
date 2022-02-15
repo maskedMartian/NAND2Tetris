@@ -9,8 +9,6 @@
 #define FIRST_PARAMETER 1
 #define COMMAND_LINE_PARAMETER_WAS_ENTERED (argc > 1)
 
-// Trivial change
-
 /*
 FROM THE BOOK:
 The main program should construct a Parser to parse the VM input file and a
