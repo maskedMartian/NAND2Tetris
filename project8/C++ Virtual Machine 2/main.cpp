@@ -49,7 +49,6 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-// stuff
 void translateFile(std::string filename)
 {
     Parser parser(filename);
