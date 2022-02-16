@@ -57,9 +57,21 @@ void translateFile(std::string filename)
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
         if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
-            codeWriter.WritePushPop(parser.commandType(), parser.arg1(), parser.arg2());
-        } else {
+            codeWriter.writePushPop(parser.commandType(), parser.arg1(), parser.arg2());
+        } else if (parser.commandType() == C_ARITHMETIC) {
             codeWriter.writeArithmetic(parser.arg1());
+        } else if (parser.commandType() == C_LABEL) {
+            codeWriter.writeLabel(parser.arg1());
+        } else if (parser.commandType() == C_GOTO) {
+            codeWriter.writeGoto(parser.arg1());
+        } else if (parser.commandType() == C_IF) {
+            codeWriter.writeIf(parser.arg1());
+        } else if (parser.commandType() == C_CALL) {
+            codeWriter.writeCall(parser.arg1(), parser.arg2());
+        } else if (parser.commandType() == C_RETURN) {
+            codeWriter.writeReturn();
+        } else { // parser.commandType() == C_FUNCTION
+            codeWriter.writeFunction(parser.arg1(), parser.arg2());
         }
     }
 }

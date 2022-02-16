@@ -57,7 +57,7 @@ void CodeWriter::writeArithmetic(std::string command)
 
 // Writes the assembly code to the output file that is the translation of the given command, where
 // command is C_PUSH or C_POP
-void CodeWriter::WritePushPop(CommandTypes command, std::string segment, int index)
+void CodeWriter::writePushPop(CommandTypes command, std::string segment, int index)
 {
     std::string registerAorM = "M";
 

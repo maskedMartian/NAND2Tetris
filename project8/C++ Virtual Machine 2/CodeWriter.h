@@ -14,7 +14,7 @@ public:
     CodeWriter(std::string filename);
     ~CodeWriter();
     void writeArithmetic(std::string command);
-    void WritePushPop(CommandTypes command, std::string segment, int index);
+    void writePushPop(CommandTypes command, std::string segment, int index);
     void close();
     void writeInit();
     void writeLabel(std::string label);
