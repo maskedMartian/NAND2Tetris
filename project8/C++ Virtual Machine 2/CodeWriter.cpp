@@ -152,7 +152,9 @@ void CodeWriter::writeGoto(std::string label)
 // Writes assembly code to the assembly file that effects the if-goto command.
 void CodeWriter::writeIf(std::string label)
 {
-
+    popStackToRegisterD();
+    asmFile << "@" << label << "\n" // move into private helper function?
+            << "D;JNE" << "\n"; // move into private helper function?
 }
 
 // Writes assembly code to the assembly file that effects the call command.

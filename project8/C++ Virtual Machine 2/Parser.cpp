@@ -84,7 +84,7 @@ CommandTypes Parser::commandType() const
     if (firstWord == "pop") return C_POP;
     if (firstWord == "label") return C_LABEL;
     if (firstWord == "goto") return C_GOTO;
-    if (firstWord == "if") return C_IF;
+    if (firstWord == "if-goto") return C_IF;
     if (firstWord == "function") return C_FUNCTION;
     if (firstWord == "return") return C_RETURN;
     if (firstWord == "call") return C_CALL;
