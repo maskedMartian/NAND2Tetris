@@ -146,7 +146,8 @@ void CodeWriter::writeLabel(std::string label)
 // Writes assembly code to the assembly file that effects the goto command.
 void CodeWriter::writeGoto(std::string label)
 {
-
+    asmFile << "@" << label << "\n"
+            << "0;JMP" << "\n";
 }
 
 // Writes assembly code to the assembly file that effects the if-goto command.
