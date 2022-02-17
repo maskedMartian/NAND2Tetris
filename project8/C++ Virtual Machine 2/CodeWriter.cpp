@@ -46,7 +46,7 @@ void CodeWriter::writeArithmetic(std::string command)
         case OR:
             asmFile << "D=D|M\n";
             break;
-            // "eq", "lt", or "gt"
+        // "eq", "lt", or "gt"
         default:
             compareRegistersMAndD(command);
             break;
@@ -140,7 +140,7 @@ void CodeWriter::writeInit()
 // Writes assembly code to the assembly file that effects the label command.
 void CodeWriter::writeLabel(std::string label)
 {
-
+    asmFile << "(" << label << ")\n";
 }
 
 // Writes assembly code to the assembly file that effects the goto command.
@@ -204,8 +204,8 @@ void CodeWriter::pushRegisterDToStack()
 // value in register D using the supplied command
 void CodeWriter::compareRegistersMAndD(std::string command)
 {
-    command = 'j' + command;
     for (auto& ch : command) ch = toupper(ch);
+    command = 'J' + command; // moved this line from above the previous line to here - delete this comment after tested
     asmFile << "D=M-D\n"
             << "@TRUE" << labelCounter << "\n"
             << "D;" << command << "\n"
