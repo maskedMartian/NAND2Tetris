@@ -1,6 +1,7 @@
 #pragma once
 
 #include <fstream>
+#include <functional>
 #include <map>
 #include <string>
 
@@ -36,6 +37,7 @@ private:
     void loadConstantValueIntoRegisterA(int index);
     void loadRamAddressIntoRegisterA(int address);
     void loadAddressOfStaticVariableIntoRegisterA(int index);
+    void loopXTimes(int x, std::function<void()> codeBlockToLoopOver);
     std::string currentFile;
     std::ofstream asmFile;
     int labelCounter = 0;
@@ -49,8 +51,9 @@ private:
         { "and", AND },
         { "or", OR }
     };
-    enum segs{ argument, local, STATIC, constant, THIS, that, pointer, temp };
+    enum segs{ ram, argument, local, STATIC, constant, THIS, that, pointer, temp };
     std::map<std::string, segs> segments = {
+        { "R", ram },
         { "argument", argument },
         { "local", local },
         { "static", STATIC },

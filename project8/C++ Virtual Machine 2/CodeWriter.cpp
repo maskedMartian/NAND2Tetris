@@ -64,6 +64,9 @@ void CodeWriter::writePushPop(CommandTypes command, std::string segment, int ind
     if (command == C_PUSH) {
         // push the value of segment[index] onto the stack
         switch (segments[segment]) {
+        case ram:
+            loadSegmentAddressIntoRegisterA("SP", index);
+            break;
         case argument:
             loadSegmentAddressIntoRegisterA("ARG", index);
             break;
@@ -96,6 +99,9 @@ void CodeWriter::writePushPop(CommandTypes command, std::string segment, int ind
     } else {
         // pop the stack and store the value in segment[index]
         switch (segments[segment]) {
+        case ram:
+            loadSegmentAddressIntoRegisterA("SP", index);
+            break;
         case argument:
             loadSegmentAddressIntoRegisterA("ARG", index);
             break;
@@ -154,8 +160,8 @@ void CodeWriter::writeGoto(std::string label)
 void CodeWriter::writeIf(std::string label)
 {
     popStackToRegisterD();
-    asmFile << "@" << label << "\n" // move into private helper function?
-            << "D;JNE" << "\n"; // move into private helper function?
+    asmFile << "@" << label << "\n"
+            << "D;JNE" << "\n";
 }
 
 // Writes assembly code to the assembly file that effects the call command.
@@ -163,17 +169,35 @@ void CodeWriter::writeCall(std::string functionName, int numArgs)
 {
 
 }
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Writes assembly code to the assembly file that effects the return command.
 void CodeWriter::writeReturn()
 {
-
+    writePushPop(C_PUSH, "argument", 0); // push value at ARG[0] to stack
+    popStackToRegisterD();
+    asmFile << "D=D+1\n"; // increment the value
+    copyRegisterDToAddressStoredInRam(R13); // move the incremented value to R13
+    writePushPop(C_POP, "argument", 0); // pop stack to ARG[0]
+    // set SP = LCL
+    writePushPop(C_PUSH, "R", 1); // push value in R1 (LCL) to stack
+    writePushPop(C_POP, "R", 0); // pop a value from the stack to R0 (SP)
+    writePushPop(C_POP, "argument", 0); // pop stack to ARG[0]
+    // pop stack to R4 (THAT)
+    // pop stack to R3 (THIS)
+    // pop stack to R2 (ARG)
+    // pop stack to R1 (LCL)
+    // pop stack to R14 (return address)
+    // set SP = R13
+    // jump to address stored in R14
 }
 
 // Writes assembly code to the assembly file that effects the function command.
 void CodeWriter::writeFunction(std::string functionName, int numLocals)
 {
-
+    writeLabel(functionName);
+    loopXTimes(numLocals, [this]() {
+        writePushPop(C_PUSH, "constant", 0)
+    });
 }
 
 // Writes the assembly code to the output file that will pop a value from the stack into
@@ -193,7 +217,8 @@ void CodeWriter::popStackToRegisterD()
     asmFile << "D=M\n";
 }
 
-// Writes the assembly code to the output file that will push the value in register D to the stack
+// Writes the assembly code to the output file that will push the value in register D onto the
+// stack
 void CodeWriter::pushRegisterDToStack()
 {
     asmFile << "@SP\n"
@@ -218,7 +243,7 @@ void CodeWriter::compareRegistersMAndD(std::string command)
             << "(TRUE" << labelCounter << ")\n"
             << "D=-1\n"
             << "(END" << labelCounter << ")\n";
-    labelCounter++;
+    ++labelCounter;
 }
 
 // Writes the assembly code to the output file that will signal the end of the program with an
@@ -286,4 +311,21 @@ void CodeWriter::loadAddressOfStaticVariableIntoRegisterA(int index)
         filename = filename.substr(filename.find('\\') + 1, std::string::npos);
     }
     asmFile << "@" << filename << index << "\n";
+}
+
+// Writes the assembly code to the output file that will repeat the callback function x times
+void CodeWriter::loopXTimes(int x, std::function<void()> codeBlockToLoopOver)
+{
+    asmFile << "@" << x << "\n"
+            << "D=A\n"
+            << "@COUNTER" << labelCounter << "\n"
+            << "M=D\n"
+            << "(LOOP" << labelCounter << ")\n";
+    codeBlockToLoopOver();
+    asmFile << "@COUNTER" << labelCounter << "\n"
+            << "M=M-1\n"
+            << "D=M\n"
+            << "@LOOP" << labelCounter << "\n"
+            << "D;JGT\n";
+    ++labelCounter;
 }
