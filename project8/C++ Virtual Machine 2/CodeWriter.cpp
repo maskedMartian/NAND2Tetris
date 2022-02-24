@@ -64,9 +64,6 @@ void CodeWriter::writePushPop(CommandTypes command, std::string segment, int ind
     if (command == C_PUSH) {
         // push the value of segment[index] onto the stack
         switch (segments[segment]) {
-        case ram:
-            loadSegmentAddressIntoRegisterA("SP", index);
-            break;
         case argument:
             loadSegmentAddressIntoRegisterA("ARG", index);
             break;
@@ -99,9 +96,6 @@ void CodeWriter::writePushPop(CommandTypes command, std::string segment, int ind
     } else {
         // pop the stack and store the value in segment[index]
         switch (segments[segment]) {
-        case ram:
-            loadSegmentAddressIntoRegisterA("SP", index);
-            break;
         case argument:
             loadSegmentAddressIntoRegisterA("ARG", index);
             break;
@@ -169,26 +163,24 @@ void CodeWriter::writeCall(std::string functionName, int numArgs)
 {
 
 }
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Writes assembly code to the assembly file that effects the return command.
 void CodeWriter::writeReturn()
 {
     writePushPop(C_PUSH, "argument", 0); // push value at ARG[0] to stack
     popStackToRegisterD();
-    asmFile << "D=D+1\n"; // increment the value
-    copyRegisterDToAddressStoredInRam(R13); // move the incremented value to R13
+    incrementValueInRegisterD(); // increment the value stored in register D
+    copyRegisterDToRam("R14"); // move the incremented value to R14
     writePushPop(C_POP, "argument", 0); // pop stack to ARG[0]
-    // set SP = LCL
-    writePushPop(C_PUSH, "R", 1); // push value in R1 (LCL) to stack
-    writePushPop(C_POP, "R", 0); // pop a value from the stack to R0 (SP)
+    copyRamToRam("SP", "LCL"); // SP = LCL
     writePushPop(C_POP, "argument", 0); // pop stack to ARG[0]
-    // pop stack to R4 (THAT)
-    // pop stack to R3 (THIS)
-    // pop stack to R2 (ARG)
-    // pop stack to R1 (LCL)
-    // pop stack to R14 (return address)
-    // set SP = R13
-    // jump to address stored in R14
+    popStackToRam("THAT"); // pop stack THAT (R4)
+    popStackToRam("THIS"); // pop stack THIS (R3)
+    popStackToRam("ARG"); // pop stack to ARG (R2)
+    popStackToRam("LCL"); // pop stack to LCL (R1)
+    popStackToRam("R15"); // pop stack to R15 (return address)
+    copyRamToRam("SP", "R14"); // set SP = R14
+    jumpToAddressStoredInRam("R15"); // jump to address stored in R15 - copy address into registerA
 }
 
 // Writes assembly code to the assembly file that effects the function command.
@@ -196,7 +188,7 @@ void CodeWriter::writeFunction(std::string functionName, int numLocals)
 {
     writeLabel(functionName);
     loopXTimes(numLocals, [this]() {
-        writePushPop(C_PUSH, "constant", 0)
+        writePushPop(C_PUSH, "constant", 0);
     });
 }
 
@@ -217,6 +209,13 @@ void CodeWriter::popStackToRegisterD()
     asmFile << "D=M\n";
 }
 
+// Writes...
+void CodeWriter::popStackToRam(std::string address)
+{
+    popStackToRegisterD();
+    copyRegisterDToRam(address);
+}
+
 // Writes the assembly code to the output file that will push the value in register D onto the
 // stack
 void CodeWriter::pushRegisterDToStack()
@@ -226,6 +225,44 @@ void CodeWriter::pushRegisterDToStack()
             << "M=D\n"
             << "@SP\n"
             << "M=M+1\n";
+}
+
+// Writes the assembly code to the output file that will push the value in register M onto the
+// stack
+void CodeWriter::pushRegisterMToStack()
+{
+    asmFile << "D=M\n";
+    pushRegisterDToStack();
+}
+
+// Writes...
+void CodeWriter::pushRamToStack(std::string address)
+{
+    copyRamToRegisterD(address);
+    pushRegisterDToStack();
+}
+
+// Writes...
+void CodeWriter::copyRegisterDToRam(std::string address)
+{
+    asmFile << "@" << address << "\n"
+            << "M=D\n";
+}
+
+// Writes...
+void CodeWriter::copyRamToRegisterD(std::string address)
+{
+    asmFile << "@" << address << "\n"
+            << "D=M\n";
+}
+
+// Writes...
+void CodeWriter::copyRamToRam(std::string toAddress, std::string fromAddress)
+{
+    asmFile << "@" << fromAddress << "\n"
+            << "D=M\n"
+            << "@" << toAddress << "\n"
+            << "M=D\n";
 }
 
 // Writes the assembly code to the output file that will compare the value in register M to the
@@ -328,4 +365,18 @@ void CodeWriter::loopXTimes(int x, std::function<void()> codeBlockToLoopOver)
             << "@LOOP" << labelCounter << "\n"
             << "D;JGT\n";
     ++labelCounter;
+}
+
+// Writes...
+void CodeWriter::jumpToAddressStoredInRam(std::string address)
+{
+    copyRamToRegisterD(address);
+    asmFile << "A=D\n"
+            << "0;JMP\n";
+}
+
+//
+void CodeWriter::incrementValueInRegisterD()
+{
+    asmFile << "D=D+1\n";
 }

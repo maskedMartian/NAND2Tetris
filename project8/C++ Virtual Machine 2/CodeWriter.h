@@ -27,7 +27,13 @@ public:
 private:
     void popStackToRegisterM();
     void popStackToRegisterD();
+    void popStackToRam(std::string address);
     void pushRegisterDToStack();
+    void pushRegisterMToStack();
+    void pushRamToStack(std::string address);
+    void copyRegisterDToRam(std::string address);
+    void copyRamToRegisterD(std::string address);
+    void copyRamToRam(std::string address1, std::string address2);
     void compareRegistersMAndD(std::string command);
     void addEndOfProgramCode();
     void loadSegmentAddressIntoRegisterA(std::string segment, int index);
@@ -38,6 +44,8 @@ private:
     void loadRamAddressIntoRegisterA(int address);
     void loadAddressOfStaticVariableIntoRegisterA(int index);
     void loopXTimes(int x, std::function<void()> codeBlockToLoopOver);
+    void jumpToAddressStoredInRam(std::string address);
+    void incrementValueInRegisterD();
     std::string currentFile;
     std::ofstream asmFile;
     int labelCounter = 0;
@@ -51,9 +59,8 @@ private:
         { "and", AND },
         { "or", OR }
     };
-    enum segs{ ram, argument, local, STATIC, constant, THIS, that, pointer, temp };
+    enum segs{ argument, local, STATIC, constant, THIS, that, pointer, temp };
     std::map<std::string, segs> segments = {
-        { "R", ram },
         { "argument", argument },
         { "local", local },
         { "static", STATIC },
