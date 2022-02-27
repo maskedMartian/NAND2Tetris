@@ -27,20 +27,19 @@ public:
 private:
     void popStackToRegisterM();
     void popStackToRegisterD();
-    void popStackToRam(std::string address);
+    void popStackToRamAddress(std::string address);
     void pushRegisterDToStack();
     void pushRegisterMToStack();
-    void copyRegisterDToRam(std::string address);
-    void copyRamToRegisterD(std::string address);
-    void copyRamToRam(std::string address1, std::string address2);
+    void copyRegisterDToRamAddress(std::string address);
+    void copyRamAddressToRegisterD(std::string address);
+    void copyFromRamAddressToRamAddress(std::string address1, std::string address2);
     void compareRegistersMAndD(std::string command);
     void addEndOfProgramCode();
-    void loadSegmentAddressIntoRegisterA(std::string segment, int index);
-    void copyRegisterAToRam(std::string address);
+    void loadRamSegmentAddressIntoRegisterA(std::string segment, int index);
+    void copyRegisterAToRamAddress(std::string address);
     void copyRegisterDToAddressStoredInRam(std::string address);
-    void setRegisterDEqualToRegister(std::string registerAorM);
+    void setRegisterDEqualTo(std::string registerAorM);
     void loadValueIntoRegisterA(int index);
-    // void loadRamAddressIntoRegisterA(int address);
     void loadAddressOfStaticVariableIntoRegisterA(int index);
     void loopXTimes(int x, std::function<void()> codeBlockToLoopOver);
     void jumpToAddressStoredInRam(std::string address);
