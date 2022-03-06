@@ -30,6 +30,7 @@ private:
     void popStackToRamAddress(std::string address);
     void pushRegisterDToStack();
     void pushRegisterMToStack();
+    void pushRamAddressToStack(std::string address);
     void copyRegisterDToRamAddress(std::string address);
     void copyRamAddressToRegisterD(std::string address);
     void copyFromRamAddressToRamAddress(std::string address1, std::string address2);
@@ -43,6 +44,7 @@ private:
     void loadAddressOfStaticVariableIntoRegisterA(int index);
     void loopXTimes(int x, std::function<void()> codeBlockToLoopOver);
     void jumpToAddressStoredInRam(std::string address);
+    void jumpToFunction(std::string functionName);
     void incrementStackPointer();
     void decrementStackPointer();
     std::string currentFile;

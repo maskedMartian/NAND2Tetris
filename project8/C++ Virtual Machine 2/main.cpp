@@ -17,7 +17,7 @@ march through the VM commands in the input file and generate assembly code for
 each one of them.
 */
 
-void translateFile(std::string);
+void translateFile(std::string, CodeWriter*);
 
 int main(int argc, char* argv[])
 {
@@ -25,10 +25,11 @@ int main(int argc, char* argv[])
 
     if (COMMAND_LINE_PARAMETER_WAS_ENTERED) {
         std::string parameter{ argv[FIRST_PARAMETER] };
+        CodeWriter* codeWriter = new CodeWriter(parameter);
         int startingPosition = parameter.length() - EXTENSION_LENGTH;
         std::string extension = parameter.substr(startingPosition, std::string::npos);
         if (extension == ".vm") {
-            translateFile(parameter);
+            translateFile(parameter, codeWriter);
         } else {
             // parameter is a directory
             std::string path = root + parameter;
@@ -39,7 +40,7 @@ int main(int argc, char* argv[])
                 if (extension == ".vm") {
                     startingPosition = root.length();
                     std::string filename = filepath.substr(startingPosition, std::string::npos);
-                    translateFile(filename);
+                    translateFile(filename, codeWriter);
                 }
             }
         } 
@@ -49,29 +50,29 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-void translateFile(std::string filename)
+void translateFile(std::string filename, CodeWriter* codeWriter)
 {
     Parser parser(filename);
-    CodeWriter codeWriter(filename);
+    //CodeWriter codeWriter(filename);
 
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
         if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
-            codeWriter.writePushPop(parser.commandType(), parser.arg1(), parser.arg2());
+            codeWriter->writePushPop(parser.commandType(), parser.arg1(), parser.arg2());
         } else if (parser.commandType() == C_ARITHMETIC) {
-            codeWriter.writeArithmetic(parser.arg1());
+            codeWriter->writeArithmetic(parser.arg1());
         } else if (parser.commandType() == C_LABEL) {
-            codeWriter.writeLabel(parser.arg1());
+            codeWriter->writeLabel(parser.arg1());
         } else if (parser.commandType() == C_GOTO) {
-            codeWriter.writeGoto(parser.arg1());
+            codeWriter->writeGoto(parser.arg1());
         } else if (parser.commandType() == C_IF) {
-            codeWriter.writeIf(parser.arg1());
+            codeWriter->writeIf(parser.arg1());
         } else if (parser.commandType() == C_CALL) {
-            codeWriter.writeCall(parser.arg1(), parser.arg2());
+            codeWriter->writeCall(parser.arg1(), parser.arg2());
         } else if (parser.commandType() == C_RETURN) {
-            codeWriter.writeReturn();
+            codeWriter->writeReturn();
         } else { // parser.commandType() == C_FUNCTION
-            codeWriter.writeFunction(parser.arg1(), parser.arg2());
+            codeWriter->writeFunction(parser.arg1(), parser.arg2());
         }
     }
 }

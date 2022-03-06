@@ -130,7 +130,13 @@ void CodeWriter::close()
 // bootstrap code. This code must be placed at the beginning of the output file.
 void CodeWriter::writeInit()
 {
-    // TODO
+    // load RAM[256] into the stack pointer - SP or R0 or RAM[0]
+    asmFile << "@256\n"
+            << "D=A\n"
+            << "@SP\n"
+            << "M=D\n";
+    // call Init.sys
+    writeCall("Sys.init", 0);
 }
 
 // Writes assembly code to the assembly file that effects the label command.
@@ -157,7 +163,19 @@ void CodeWriter::writeIf(std::string label)
 // Writes assembly code to the assembly file that effects the call command.
 void CodeWriter::writeCall(std::string functionName, int numArgs)
 {
-    // TODO
+    asmFile << "@RETURN" << labelCounter << "\n" // push return-address // (Using the label declared below)
+            << "D=A\n";
+    pushRegisterDToStack();
+
+    pushRamAddressToStack("LCL"); // Save LCL of the calling function
+    pushRamAddressToStack("ARG"); // Save ARG of the calling function
+    pushRamAddressToStack("THIS"); // Save THIS of the calling function
+    pushRamAddressToStack("THAT"); // Save THAT of the calling function  
+    // ARG =  SP-n-5 // Reposition ARG (n = number of args)
+    copyFromRamAddressToRamAddress("SP", "LCL"); // LCL = SP // Reposition LCL
+    jumpToFunction(functionName); // goto f // Transfer control
+    writeLabel("RETURN" + std::to_string(labelCounter)); // Declare a label for the return-address
+    ++labelCounter;
 }
 
 // Writes assembly code to the assembly file that effects the return command.
@@ -211,7 +229,8 @@ void CodeWriter::popStackToRegisterD()
     asmFile << "D=M\n";
 }
 
-// Writes...
+// Writes the assembly code to the output file that will pop a value from the stack into a
+// specified RAM address
 void CodeWriter::popStackToRamAddress(std::string address)
 {
     popStackToRegisterD();
@@ -233,6 +252,14 @@ void CodeWriter::pushRegisterDToStack()
 void CodeWriter::pushRegisterMToStack()
 {
     asmFile << "D=M\n";
+    pushRegisterDToStack();
+}
+
+// Writes the assembly code to the output file that will push the value from a specified RAM
+// address onto the stack
+void CodeWriter::pushRamAddressToStack(std::string address)
+{
+    copyRamAddressToRegisterD(address);
     pushRegisterDToStack();
 }
 
@@ -263,7 +290,7 @@ void CodeWriter::copyFromRamAddressToRamAddress(std::string fromAddress, std::st
 }
 
 // Writes the assembly code to the output file that will compare the value in register M to the
-// value in register D using the supplied command
+// value in register D using the supplied command: equal (eq), less than (lt), or greater than(gt)
 void CodeWriter::compareRegistersMAndD(std::string command)
 {
     for (auto& ch : command) ch = toupper(ch);
@@ -363,6 +390,14 @@ void CodeWriter::jumpToAddressStoredInRam(std::string address)
 {
     copyRamAddressToRegisterD(address);
     asmFile << "A=D\n"
+            << "0;JMP\n";
+}
+
+// Writes the assembly code to the output file that will transfer program control to the specified
+// function
+void CodeWriter::jumpToFunction(std::string functionName)
+{
+    asmFile << "@" << functionName << "\n"
             << "0;JMP\n";
 }
 
