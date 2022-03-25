@@ -163,15 +163,22 @@ void CodeWriter::writeIf(std::string label)
 // Writes assembly code to the assembly file that effects the call command.
 void CodeWriter::writeCall(std::string functionName, int numArgs)
 {
+    asmFile << "@SP\n"
+            << "D=M\n";
+    for (auto i = 0; i < numArgs; ++i) {
+        asmFile << "D=D-1\n";
+    }
+    copyRegisterDToRamAddress("R14");
+    // -------------------------------------------
     asmFile << "@RETURN" << labelCounter << "\n" // push return-address // (Using the label declared below)
             << "D=A\n";
     pushRegisterDToStack();
-
+    // -------------------------------------------
     pushRamAddressToStack("LCL"); // Save LCL of the calling function
     pushRamAddressToStack("ARG"); // Save ARG of the calling function
     pushRamAddressToStack("THIS"); // Save THIS of the calling function
     pushRamAddressToStack("THAT"); // Save THAT of the calling function  
-    // ARG =  SP-n-5 // Reposition ARG (n = number of args)
+    copyFromRamAddressToRamAddress("R14", "ARG");// ARG =  SP-n-5 // Reposition ARG (n = number of args)
     copyFromRamAddressToRamAddress("SP", "LCL"); // LCL = SP // Reposition LCL
     jumpToFunction(functionName); // goto f // Transfer control
     writeLabel("RETURN" + std::to_string(labelCounter)); // Declare a label for the return-address
@@ -370,6 +377,7 @@ void CodeWriter::loadAddressOfStaticVariableIntoRegisterA(int index)
 // Writes the assembly code to the output file that will repeat the callback function x times
 void CodeWriter::loopXTimes(int x, std::function<void()> codeBlockToLoopOver)
 {
+    if (x == 0) return;
     asmFile << "@" << x << "\n"
             << "D=A\n"
             << "@COUNTER" << labelCounter << "\n"

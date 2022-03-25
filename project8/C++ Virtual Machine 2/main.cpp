@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
             translateFile(parameter, codeWriter);
         } else {
             // parameter is a directory
+            codeWriter->writeInit();
             std::string path = root + parameter;
             for (const auto& file : std::filesystem::recursive_directory_iterator(path)) {
                 std::string filepath = file.path().string();
