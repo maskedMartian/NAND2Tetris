@@ -20,6 +20,11 @@ public:
     CommandTypes commandType() const;
     std::string arg1() const;
     int arg2() const;
+
+    std::string getCommand()
+    {
+        return commandPhrase;
+    }
 private:
     bool isBlank(std::string line) const;
     bool isComment(std::string line) const;

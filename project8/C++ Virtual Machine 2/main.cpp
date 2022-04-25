@@ -25,13 +25,15 @@ int main(int argc, char* argv[])
 
     if (COMMAND_LINE_PARAMETER_WAS_ENTERED) {
         std::string parameter{ argv[FIRST_PARAMETER] };
-        CodeWriter* codeWriter = new CodeWriter(parameter);
         int startingPosition = parameter.length() - EXTENSION_LENGTH;
         std::string extension = parameter.substr(startingPosition, std::string::npos);
         if (extension == ".vm") {
+            CodeWriter* codeWriter = new CodeWriter(parameter);
             translateFile(parameter, codeWriter);
         } else {
             // parameter is a directory
+            std::string p = parameter + '\\' + parameter; // TODO - RENAME VARIABLE p HERE!!!!!!!!!!!!
+            CodeWriter* codeWriter = new CodeWriter(p);
             codeWriter->writeInit();
             std::string path = root + parameter;
             for (const auto& file : std::filesystem::recursive_directory_iterator(path)) {
@@ -55,9 +57,11 @@ void translateFile(std::string filename, CodeWriter* codeWriter)
 {
     Parser parser(filename);
     //CodeWriter codeWriter(filename);
+    codeWriter->setFileName(filename);
 
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
+        codeWriter->writeSpy(parser.getCommand());
         if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
             codeWriter->writePushPop(parser.commandType(), parser.arg1(), parser.arg2());
         } else if (parser.commandType() == C_ARITHMETIC) {
