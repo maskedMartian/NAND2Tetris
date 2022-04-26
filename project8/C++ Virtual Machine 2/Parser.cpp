@@ -39,7 +39,7 @@ bool Parser::theFileHasMoreCommands()
     std::string line;
     std::streampos position;
 
-    // skip over all blank lines and comment only lines
+    // skip over all blank and comment only lines
     do {
         position = vmFile.tellg();
         std::getline(vmFile, line);
@@ -64,15 +64,11 @@ bool Parser::theFileHasMoreCommands()
 // Reads the next command from the input and makes it the current command
 void Parser::advance()
 {
-    //if (theFileHasMoreCommands()) {
-        std::getline(vmFile, commandPhrase);
-        // truncate end of line comment
-        if (commandPhrase.find("//") != std::string::npos) {
-            commandPhrase = commandPhrase.substr(0, commandPhrase.find("//"));
-        }
-    //} else {
-       // commandPhrase = "none";
-    //}
+    std::getline(vmFile, commandPhrase);
+    // truncate end of line comment
+    if (commandPhrase.find("//") != std::string::npos) {
+        commandPhrase = commandPhrase.substr(0, commandPhrase.find("//"));
+    }
 }
 
 // Returns the type of the current VM command

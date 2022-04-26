@@ -27,11 +27,6 @@ public:
     void writeCall(std::string functionName, int numArgs);
     void writeReturn();
     void writeFunction(std::string functionName, int numLocals);
-
-    void writeSpy(std::string commandPhrase)
-    {
-        spy << std::setw(22) << std::left << commandPhrase << "  " << lineCount1 << "  " << lineCount2 << "\n";
-    }
 private:
     void popStackToRegisterM();
     void popStackToRegisterD();
@@ -42,7 +37,8 @@ private:
     void copyRegisterDToRamAddress(std::string address);
     void copyRamAddressToRegisterD(std::string address);
     void copyFromRamAddressToRamAddress(std::string fromAddress, std::string toAddress);
-    void copyFromRamAddressToRamAddress(std::string fromAddress, int fromAddressIndex, std::string toAddress);
+    // RENAME THIS FUNCTION
+    void copyFromPointerToRamAddress(std::string addressPointer, int pointerIndex, std::string toAddress);
     void compareRegistersMAndD(std::string command);
     void addEndOfProgramCode();
     void loadRamSegmentAddressIntoRegisterA(std::string segment, int index, bool test = false);
@@ -80,7 +76,4 @@ private:
         { "pointer", pointer },
         { "temp", temp }
     };
-    int lineCount1;
-    int lineCount2;
-    std::ofstream spy;
 };

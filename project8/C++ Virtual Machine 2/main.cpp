@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
             translateFile(parameter, codeWriter);
         } else {
             // parameter is a directory
-            std::string p = parameter + '\\' + parameter; // TODO - RENAME VARIABLE p HERE!!!!!!!!!!!!
-            CodeWriter* codeWriter = new CodeWriter(p);
+            std::string directory = parameter + '\\' + parameter;
+            CodeWriter* codeWriter = new CodeWriter(directory);
             codeWriter->writeInit();
             std::string path = root + parameter;
             for (const auto& file : std::filesystem::recursive_directory_iterator(path)) {
@@ -56,12 +56,10 @@ int main(int argc, char* argv[])
 void translateFile(std::string filename, CodeWriter* codeWriter)
 {
     Parser parser(filename);
-    //CodeWriter codeWriter(filename);
     codeWriter->setFileName(filename);
 
     while (parser.theFileHasMoreCommands()) {
         parser.advance();
-        codeWriter->writeSpy(parser.getCommand());
         if (parser.commandType() == C_PUSH || parser.commandType() == C_POP) {
             codeWriter->writePushPop(parser.commandType(), parser.arg1(), parser.arg2());
         } else if (parser.commandType() == C_ARITHMETIC) {
